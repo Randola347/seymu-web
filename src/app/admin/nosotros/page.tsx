@@ -1,23 +1,23 @@
 import { getCompanySettings } from "@/lib/seymu-data";
-import EmpresaForm from "./EmpresaForm";
+import NosotrosForm from "./NosotrosForm";
 
 export const dynamic = "force-dynamic";
 
-export default async function EmpresaPage() {
+export default async function AdminNosotrosPage() {
   const company = await getCompanySettings();
 
   return (
     <div className="admin-form-container">
       <div className="admin-header">
         <div>
-          <h1 className="page-title">Configuración de Empresa</h1>
+          <h1 className="page-title">Sobre Nosotros</h1>
           <p className="page-text">
-            Administrá los datos de contacto y la identidad visual de Seymu.
+            Gestioná el contenido histórico y los valores (Misión y Visión) que se muestran en la página informativa.
           </p>
         </div>
       </div>
 
-      <EmpresaForm company={company} />
+      <NosotrosForm company={company} />
     </div>
   );
 }

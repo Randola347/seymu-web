@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
-import WhatsAppButton from "./components/whatsapp/WhatsAppButton";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Maderas Finas Seymu",
@@ -17,10 +15,8 @@ export default function RootLayout({
   return (
     <html lang="es" data-scroll-behavior="smooth">
       <body>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <WhatsAppButton />
+        <Toaster position="top-right" richColors />
+        {children}
       </body>
     </html>
   );

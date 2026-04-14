@@ -5,6 +5,9 @@ export type CompanySettings = {
   company_name: string;
   slogan: string | null;
   about_text: string | null;
+  history_text: string | null;
+  mission_text: string | null;
+  vision_text: string | null;
   whatsapp_number: string;
   phone: string | null;
   email: string | null;
@@ -50,6 +53,9 @@ type SaveCompanyInput = {
   company_name: string;
   slogan?: string | null;
   about_text?: string | null;
+  history_text?: string | null;
+  mission_text?: string | null;
+  vision_text?: string | null;
   whatsapp_number: string;
   phone?: string | null;
   email?: string | null;
@@ -96,16 +102,19 @@ export async function saveCompanySettings(
     const rows = (await sql`
       UPDATE company_settings
       SET
-        company_name = ${input.company_name},
-        slogan = ${emptyToNull(input.slogan)},
-        about_text = ${emptyToNull(input.about_text)},
-        whatsapp_number = ${input.whatsapp_number},
-        phone = ${emptyToNull(input.phone)},
-        email = ${emptyToNull(input.email)},
-        address = ${emptyToNull(input.address)},
-        schedule = ${emptyToNull(input.schedule)},
-        logo_url = ${emptyToNull(input.logo_url)},
-        banner_url = ${emptyToNull(input.banner_url)},
+        company_name = ${input.company_name ?? existing.company_name},
+        slogan = ${input.slogan !== undefined ? emptyToNull(input.slogan) : existing.slogan},
+        about_text = ${input.about_text !== undefined ? emptyToNull(input.about_text) : existing.about_text},
+        history_text = ${input.history_text !== undefined ? emptyToNull(input.history_text) : existing.history_text},
+        mission_text = ${input.mission_text !== undefined ? emptyToNull(input.mission_text) : existing.mission_text},
+        vision_text = ${input.vision_text !== undefined ? emptyToNull(input.vision_text) : existing.vision_text},
+        whatsapp_number = ${input.whatsapp_number ?? existing.whatsapp_number},
+        phone = ${input.phone !== undefined ? emptyToNull(input.phone) : existing.phone},
+        email = ${input.email !== undefined ? emptyToNull(input.email) : existing.email},
+        address = ${input.address !== undefined ? emptyToNull(input.address) : existing.address},
+        schedule = ${input.schedule !== undefined ? emptyToNull(input.schedule) : existing.schedule},
+        logo_url = ${input.logo_url !== undefined ? emptyToNull(input.logo_url) : existing.logo_url},
+        banner_url = ${input.banner_url !== undefined ? emptyToNull(input.banner_url) : existing.banner_url},
         updated_at = NOW()
       WHERE id = ${existing.id}
       RETURNING *
@@ -119,6 +128,9 @@ export async function saveCompanySettings(
       company_name,
       slogan,
       about_text,
+      history_text,
+      mission_text,
+      vision_text,
       whatsapp_number,
       phone,
       email,
@@ -131,6 +143,9 @@ export async function saveCompanySettings(
       ${input.company_name},
       ${emptyToNull(input.slogan)},
       ${emptyToNull(input.about_text)},
+      ${emptyToNull(input.history_text)},
+      ${emptyToNull(input.mission_text)},
+      ${emptyToNull(input.vision_text)},
       ${input.whatsapp_number},
       ${emptyToNull(input.phone)},
       ${emptyToNull(input.email)},
@@ -257,6 +272,16 @@ export async function updateWoodStatus(
     SET
       is_active = ${isActive},
       updated_at = NOW()
+    WHERE id = ${id}
+  `;
+}
+
+export async function deleteWood(id: number): Promise<void> {
+  // Nota: Las imágenes asociadas (wood_images) deberían ser borradas por ON DELETE CASCADE 
+  // si la base de datos está configurada así, o manualmente aquí.
+  // Por ahora borraremos la madera directamente.
+  await sql`
+    DELETE FROM woods
     WHERE id = ${id}
   `;
 }

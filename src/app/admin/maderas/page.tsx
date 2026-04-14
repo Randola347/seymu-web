@@ -1,93 +1,74 @@
 import Link from "next/link";
-import { revalidatePath } from "next/cache";
-import { getAllWoods, updateWoodStatus } from "@/lib/seymu-data";
+import { getAllWoods } from "@/lib/seymu-data";
+import WoodStatusToggle from "./WoodStatusToggle";
+import WoodDeleteButton from "./WoodDeleteButton";
 import WoodImageUploader from "@/app/components/admin/WoodImageUploader";
+import { Plus, Edit2 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminMaderasPage() {
   const woods = await getAllWoods();
 
-  async function toggleWoodAction(formData: FormData) {
-    "use server";
-
-    const id = Number(formData.get("id"));
-    const nextIsActive = String(formData.get("nextIsActive")) === "true";
-
-    if (!id) return;
-
-    await updateWoodStatus(id, nextIsActive);
-
-    revalidatePath("/admin/maderas");
-    revalidatePath("/maderas");
-    revalidatePath("/");
-  }
-
   return (
-    <section className="page-section">
-      <div className="container">
-        <div className="admin-header">
-          <div>
-            <h1 className="page-title">Administrar maderas</h1>
-            <p className="page-text">
-              Desde aquí podés crear, editar, activar, desactivar y subir imágenes.
-            </p>
-          </div>
-
-          <Link href="/admin/maderas/nueva" className="btn-primary">
-            Nueva madera
-          </Link>
+    <div>
+      <div className="admin-header">
+        <div>
+          <h1 className="page-title">Inventario de Maderas</h1>
+          <p className="page-text">
+            Gestioná el catálogo de productos, sus precios y galería de imágenes.
+          </p>
         </div>
 
-        <div className="admin-woods-grid">
-          {woods.map((wood) => (
-            <article key={wood.id} className="wood-card">
-              <div className="wood-card-body">
-                <div className="admin-status-row">
-                  <span className="wood-category">{wood.category ?? "Madera"}</span>
-                  <span className={wood.is_active ? "status-badge active" : "status-badge inactive"}>
-                    {wood.is_active ? "Activa" : "Inactiva"}
-                  </span>
-                </div>
+        <Link href="/admin/maderas/nueva" className="btn-primary">
+          <Plus size={18} />
+          Nueva madera
+        </Link>
+      </div>
 
-                <h2 className="wood-title">{wood.name}</h2>
+      <div className="admin-woods-grid">
+        {woods.map((wood) => (
+          <article key={wood.id} className="wood-card">
+            <div className="wood-card-body">
+              <div className="admin-status-row">
+                <span className="wood-category">{wood.category ?? "Sin categoría"}</span>
+                <span className={wood.is_active ? "status-badge active" : "status-badge inactive"}>
+                  {wood.is_active ? "Activa" : "Inactiva"}
+                </span>
+              </div>
 
-                <p className="wood-price">
-                  ₡{Number(wood.price).toLocaleString("es-CR")}
-                </p>
+              <h2 className="wood-title" title={wood.name}>{wood.name}</h2>
 
-                <p className="wood-description">
-                  {wood.short_description ?? "Sin descripción corta."}
-                </p>
+              <p className="wood-price">
+                ₡{Number(wood.price).toLocaleString("es-CR")}
+              </p>
 
-                <div className="admin-actions">
-                  <Link
-                    href={`/admin/maderas/${wood.id}/editar`}
-                    className="btn-secondary"
-                  >
-                    Editar
-                  </Link>
+              <p className="wood-description">
+                {wood.short_description ?? "Sin descripción corta disponible."}
+              </p>
 
-                  <form action={toggleWoodAction}>
-                    <input type="hidden" name="id" value={wood.id} />
-                    <input
-                      type="hidden"
-                      name="nextIsActive"
-                      value={(!wood.is_active).toString()}
-                    />
+              <div className="admin-actions">
+                <Link
+                  href={`/admin/maderas/${wood.id}/editar`}
+                  className="btn-secondary"
+                  title="Editar detalles"
+                >
+                  <Edit2 size={16} />
+                  Editar
+                </Link>
 
-                    <button type="submit" className="btn-outline-small">
-                      {wood.is_active ? "Desactivar" : "Activar"}
-                    </button>
-                  </form>
-                </div>
+                <WoodStatusToggle id={wood.id} initialStatus={wood.is_active} />
+                
+                <WoodDeleteButton id={wood.id} name={wood.name} />
+              </div>
 
+              <div className="wood-uploader-card">
                 <WoodImageUploader woodId={wood.id} woodName={wood.name} />
               </div>
-            </article>
-          ))}
-        </div>
+            </div>
+          </article>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }
