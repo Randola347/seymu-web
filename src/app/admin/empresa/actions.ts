@@ -20,6 +20,12 @@ export async function saveCompanySettingsAction(prevState: any, formData: FormDa
 
   try {
     await saveCompanySettings(validatedFields.data);
+    
+    // Also save to site_identity table
+    await saveSiteIdentity({
+      logo_url: validatedFields.data.logo_url,
+      banner_url: validatedFields.data.banner_url
+    });
 
     revalidatePath("/");
     revalidatePath("/contacto");

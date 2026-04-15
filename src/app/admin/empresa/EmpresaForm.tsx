@@ -3,10 +3,16 @@
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { saveCompanySettingsAction } from "./actions";
-import type { CompanySettings } from "@/lib/seymu-data";
+import type { CompanySettings, SiteIdentity } from "@/lib/seymu-data";
 import EmpresaImageUploader from "./EmpresaImageUploader";
 
-export default function EmpresaForm({ company }: { company: CompanySettings | null }) {
+export default function EmpresaForm({ 
+  company, 
+  identity 
+}: { 
+  company: CompanySettings | null,
+  identity: SiteIdentity | null
+}) {
   const [state, formAction, isPending] = useActionState(saveCompanySettingsAction, {
     success: false,
     message: "",
@@ -97,13 +103,13 @@ export default function EmpresaForm({ company }: { company: CompanySettings | nu
         <EmpresaImageUploader 
           label="Logo" 
           name="logo_url" 
-          currentUrl={company?.logo_url} 
+          currentUrl={identity?.logo_url} 
         />
 
         <EmpresaImageUploader 
           label="Banner Principal" 
           name="banner_url" 
-          currentUrl={company?.banner_url} 
+          currentUrl={identity?.banner_url} 
         />
       </div>
 
@@ -121,7 +127,7 @@ export default function EmpresaForm({ company }: { company: CompanySettings | nu
 
       <div className="form-actions">
         <button type="submit" className="btn-primary" disabled={isPending}>
-          {isPending ? "Guardando..." : "Guardar Identidad"}
+          {isPending ? "Guardando..." : "Guardar Configuración"}
         </button>
       </div>
     </form>

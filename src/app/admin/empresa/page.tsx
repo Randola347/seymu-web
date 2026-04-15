@@ -1,10 +1,11 @@
-import { getCompanySettings } from "@/lib/seymu-data";
+import { getCompanySettings, getSiteIdentity } from "@/lib/seymu-data";
 import EmpresaForm from "./EmpresaForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function EmpresaPage() {
   const company = await getCompanySettings();
+  const identity = await getSiteIdentity();
 
   return (
     <div className="admin-form-container">
@@ -17,7 +18,7 @@ export default async function EmpresaPage() {
         </div>
       </div>
 
-      <EmpresaForm company={company} />
+      <EmpresaForm company={company} identity={identity} />
     </div>
   );
 }
