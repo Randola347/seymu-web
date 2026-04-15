@@ -17,6 +17,17 @@ export type CompanySettings = {
   banner_url: string | null;
 };
 
+export type AboutUs = {
+  id: number;
+  history_title: string;
+  history_content: string | null;
+  mission_title: string;
+  mission_content: string | null;
+  vision_title: string;
+  vision_content: string | null;
+  updated_at: string;
+};
+
 export type Wood = {
   id: number;
   name: string;
@@ -63,6 +74,15 @@ type SaveCompanyInput = {
   schedule?: string | null;
   logo_url?: string | null;
   banner_url?: string | null;
+};
+
+type SaveAboutUsInput = {
+  history_title?: string;
+  history_content?: string | null;
+  mission_title?: string;
+  mission_content?: string | null;
+  vision_title?: string;
+  vision_content?: string | null;
 };
 
 function emptyToNull(value?: string | null) {
@@ -113,8 +133,8 @@ export async function saveCompanySettings(
         email = ${input.email !== undefined ? emptyToNull(input.email) : existing.email},
         address = ${input.address !== undefined ? emptyToNull(input.address) : existing.address},
         schedule = ${input.schedule !== undefined ? emptyToNull(input.schedule) : existing.schedule},
-        logo_url = ${input.logo_url !== undefined ? emptyToNull(input.logo_url) : existing.logo_url},
-        banner_url = ${input.banner_url !== undefined ? emptyToNull(input.banner_url) : existing.banner_url},
+        logo_url = ${emptyToNull(input.logo_url) ?? existing.logo_url},
+        banner_url = ${emptyToNull(input.banner_url) ?? existing.banner_url},
         updated_at = NOW()
       WHERE id = ${existing.id}
       RETURNING *
@@ -157,6 +177,111 @@ export async function saveCompanySettings(
     RETURNING *
   `) as CompanySettings[];
 
+  return rows[0];
+}
+
+export interface SiteIdentity {
+  id: number;
+  logo_url: string | null;
+  banner_url: string | null;
+  updated_at: Date;
+}
+
+export async function getAboutUs(): Promise<AboutUs | null> {
+  // Auto-migration check
+  await sql`
+    CREATE TABLE IF NOT EXISTS about_us (
+      id SERIAL PRIMARY KEY,
+      history_title TEXT DEFAULT 'Historia',
+      history_content TEXT,
+      mission_title TEXT DEFAULT 'Misión',
+      mission_content TEXT,
+      vision_title TEXT DEFAULT 'Visión',
+      vision_content TEXT,
+      updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+    )
+  `;
+  
+  const rows = (await sql`
+    SELECT * FROM about_us LIMIT 1
+  `) as AboutUs[];
+  return rows[0] ?? null;
+}
+
+export async function getSiteIdentity(): Promise<SiteIdentity | null> {
+  const rows = (await sql`
+    SELECT * FROM site_identity LIMIT 1
+  `) as SiteIdentity[];
+  return rows[0] ?? null;
+}
+
+export async function saveSiteIdentity(input: {
+  logo_url?: string | null;
+  banner_url?: string | null;
+}) {
+  const existing = await getSiteIdentity();
+  
+  const emptyToNull = (val: string | null | undefined) => 
+    (val === "null" || val === "" || val === undefined) ? null : val;
+
+  if (!existing) {
+    return await sql`
+      INSERT INTO site_identity (logo_url, banner_url)
+      VALUES (
+        ${emptyToNull(input.logo_url)}, 
+        ${emptyToNull(input.banner_url)}
+      )
+      RETURNING *
+    `;
+  }
+
+  return await sql`
+    UPDATE site_identity
+    SET 
+      logo_url = ${emptyToNull(input.logo_url) ?? existing.logo_url},
+      banner_url = ${emptyToNull(input.banner_url) ?? existing.banner_url},
+      updated_at = NOW()
+    WHERE id = ${existing.id}
+    RETURNING *
+  `;
+}
+
+export async function saveAboutUs(input: SaveAboutUsInput): Promise<AboutUs> {
+  const existing = await getAboutUs();
+
+  if (existing) {
+    const rows = (await sql`
+      UPDATE about_us
+      SET
+        history_title = ${input.history_title ?? existing.history_title},
+        history_content = ${input.history_content !== undefined ? emptyToNull(input.history_content) : existing.history_content},
+        mission_title = ${input.mission_title ?? existing.mission_title},
+        mission_content = ${input.mission_content !== undefined ? emptyToNull(input.mission_content) : existing.mission_content},
+        vision_title = ${input.vision_title ?? existing.vision_title},
+        vision_content = ${input.vision_content !== undefined ? emptyToNull(input.vision_content) : existing.vision_content},
+        updated_at = NOW()
+      WHERE id = ${existing.id}
+      RETURNING *
+    `) as AboutUs[];
+    return rows[0];
+  }
+
+  const rows = (await sql`
+    INSERT INTO about_us (
+      history_title, history_content, 
+      mission_title, mission_content, 
+      vision_title, vision_content
+    )
+    VALUES (
+      ${input.history_title ?? "Historia"},
+      ${emptyToNull(input.history_content)},
+      ${input.mission_title ?? "Misión"},
+      ${emptyToNull(input.mission_content)},
+      ${input.vision_title ?? "Visión"},
+      ${emptyToNull(input.vision_content)}
+    )
+    RETURNING *
+  `) as AboutUs[];
   return rows[0];
 }
 
@@ -267,7 +392,7 @@ export async function updateWoodStatus(
   id: number,
   isActive: boolean
 ): Promise<void> {
-  await sql`
+  const response = await sql`
     UPDATE woods
     SET
       is_active = ${isActive},
@@ -277,9 +402,6 @@ export async function updateWoodStatus(
 }
 
 export async function deleteWood(id: number): Promise<void> {
-  // Nota: Las imágenes asociadas (wood_images) deberían ser borradas por ON DELETE CASCADE 
-  // si la base de datos está configurada así, o manualmente aquí.
-  // Por ahora borraremos la madera directamente.
   await sql`
     DELETE FROM woods
     WHERE id = ${id}

@@ -3,10 +3,10 @@
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { saveNosotrosAction } from "./actions";
-import type { CompanySettings } from "@/lib/seymu-data";
+import type { AboutUs } from "@/lib/seymu-data";
 import { ScrollText, Target, Eye } from "lucide-react";
 
-export default function NosotrosForm({ company }: { company: CompanySettings | null }) {
+export default function NosotrosForm({ content }: { content: AboutUs | null }) {
   const [state, formAction, isPending] = useActionState(saveNosotrosAction, {
     success: false,
     message: "",
@@ -31,10 +31,10 @@ export default function NosotrosForm({ company }: { company: CompanySettings | n
         </h2>
         <div className="form-field">
           <textarea
-            id="history_text"
-            name="history_text"
-            rows={8}
-            defaultValue={company?.history_text ?? ""}
+            id="history_content"
+            name="history_content"
+            rows={10}
+            defaultValue={content?.history_content ?? ""}
             placeholder="Contá cómo nació Seymu, vuestra trayectoria y pasión por la madera..."
             disabled={isPending}
           />
@@ -48,10 +48,10 @@ export default function NosotrosForm({ company }: { company: CompanySettings | n
         </h2>
         <div className="form-field">
           <textarea
-            id="mission_text"
-            name="mission_text"
+            id="mission_content"
+            name="mission_content"
             rows={4}
-            defaultValue={company?.mission_text ?? ""}
+            defaultValue={content?.mission_content ?? ""}
             placeholder="¿Cuál es el propósito diario de la empresa?"
             disabled={isPending}
           />
@@ -65,10 +65,10 @@ export default function NosotrosForm({ company }: { company: CompanySettings | n
         </h2>
         <div className="form-field">
           <textarea
-            id="vision_text"
-            name="vision_text"
+            id="vision_content"
+            name="vision_content"
             rows={4}
-            defaultValue={company?.vision_text ?? ""}
+            defaultValue={content?.vision_content ?? ""}
             placeholder="¿A dónde quiere llegar Seymu en el futuro?"
             disabled={isPending}
           />

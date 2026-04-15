@@ -1,10 +1,10 @@
-import { getCompanySettings } from "@/lib/seymu-data";
+import { getAboutUs } from "@/lib/seymu-data";
 import NosotrosForm from "./NosotrosForm";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminNosotrosPage() {
-  const company = await getCompanySettings();
+  const content = await getAboutUs();
 
   return (
     <div className="admin-form-container">
@@ -17,7 +17,7 @@ export default async function AdminNosotrosPage() {
         </div>
       </div>
 
-      <NosotrosForm company={company} />
+      <NosotrosForm content={content} />
     </div>
   );
 }
