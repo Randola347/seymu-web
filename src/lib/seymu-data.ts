@@ -37,6 +37,7 @@ export type Wood = {
   price: string;
   availability: string | null;
   category: string | null;
+  measurements: string | null;
   is_active: boolean;
 };
 
@@ -57,6 +58,7 @@ type SaveWoodInput = {
   price: number;
   availability?: string | null;
   category?: string | null;
+  measurements?: string | null;
   is_active?: boolean;
 };
 
@@ -285,13 +287,14 @@ export async function saveAboutUs(input: SaveAboutUsInput): Promise<AboutUs> {
   return rows[0];
 }
 
-export async function getActiveWoods(): Promise<Wood[]> {
+export async function getActiveWoods(): Promise<(Wood & { main_image_url: string | null })[]> {
   const rows = (await sql`
-    SELECT *
-    FROM woods
-    WHERE is_active = true
-    ORDER BY id ASC
-  `) as Wood[];
+    SELECT w.*, 
+           (SELECT secure_url FROM wood_images WHERE wood_id = w.id ORDER BY sort_order ASC, id ASC LIMIT 1) as main_image_url
+    FROM woods w
+    WHERE w.is_active = true
+    ORDER BY w.id ASC
+  `) as (Wood & { main_image_url: string | null })[];
 
   return rows;
 }
@@ -341,6 +344,7 @@ export async function createWood(input: SaveWoodInput): Promise<Wood> {
       price,
       availability,
       category,
+      measurements,
       is_active,
       created_at,
       updated_at
@@ -353,6 +357,7 @@ export async function createWood(input: SaveWoodInput): Promise<Wood> {
       ${input.price},
       ${emptyToNull(input.availability) ?? "Disponible"},
       ${emptyToNull(input.category)},
+      ${emptyToNull(input.measurements)},
       ${input.is_active ?? true},
       NOW(),
       NOW()
@@ -379,6 +384,7 @@ export async function updateWood(
       price = ${input.price},
       availability = ${emptyToNull(input.availability) ?? "Disponible"},
       category = ${emptyToNull(input.category)},
+      measurements = ${emptyToNull(input.measurements)},
       is_active = ${input.is_active ?? true},
       updated_at = NOW()
     WHERE id = ${id}

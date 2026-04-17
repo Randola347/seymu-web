@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { saveCompanySettings } from "@/lib/seymu-data";
+import { saveCompanySettings, saveSiteIdentity } from "@/lib/seymu-data";
 import { companySchema } from "@/lib/schemas";
 
 export async function saveCompanySettingsAction(prevState: any, formData: FormData) {

@@ -21,6 +21,7 @@ export const woodSchema = z.object({
   price: z.coerce.number().positive("El precio debe ser un número positivo"),
   availability: z.string().optional().nullable(),
   category: z.string().optional().nullable(),
+  measurements: z.string().optional().nullable(),
   is_active: z.boolean().default(true),
 });
 

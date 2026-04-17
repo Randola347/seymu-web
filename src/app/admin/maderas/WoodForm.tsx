@@ -13,7 +13,7 @@ interface WoodFormProps {
 
 export default function WoodForm({ wood, mode }: WoodFormProps) {
   const actionWithId = mode === "edit" ? updateWoodAction.bind(null, wood!.id) : createWoodAction;
-  
+
   const [state, formAction, isPending] = useActionState(actionWithId, {
     success: false,
     message: "",
@@ -35,8 +35,8 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
         <div>
           <h1 className="page-title">{mode === "create" ? "Nueva madera" : `Editar: ${wood?.name}`}</h1>
           <p className="page-text">
-            {mode === "create" 
-              ? "Creá una nueva madera para el catálogo." 
+            {mode === "create"
+              ? "Creá una nueva madera para el catálogo."
               : "Actualizá la información técnica y comercial de esta madera."}
           </p>
         </div>
@@ -50,12 +50,12 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
         <div className="form-grid">
           <div className="form-field">
             <label htmlFor="name">Nombre</label>
-            <input 
-              id="name" 
-              name="name" 
-              type="text" 
-              defaultValue={wood?.name ?? ""} 
-              required 
+            <input
+              id="name"
+              name="name"
+              type="text"
+              defaultValue={wood?.name ?? ""}
+              required
               disabled={isPending}
             />
             {state.errors?.name && <span className="error-text">{state.errors.name}</span>}
@@ -63,14 +63,14 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
 
           <div className="form-field">
             <label htmlFor="price">Precio (₡)</label>
-            <input 
-              id="price" 
-              name="price" 
-              type="number" 
-              min="0" 
-              step="0.01" 
-              defaultValue={wood?.price ?? ""} 
-              required 
+            <input
+              id="price"
+              name="price"
+              type="number"
+              min="0"
+              step="0.01"
+              defaultValue={wood?.price ?? ""}
+              required
               disabled={isPending}
             />
             {state.errors?.price && <span className="error-text">{state.errors.price}</span>}
@@ -78,13 +78,13 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
 
           <div className="form-field">
             <label htmlFor="category">Categoría</label>
-            <input 
-              id="category" 
-              name="category" 
-              type="text" 
-              defaultValue={wood?.category ?? ""} 
+            <input
+              id="category"
+              name="category"
+              type="text"
+              defaultValue={wood?.category ?? ""}
               placeholder="Ej: Mueblería, Construcción"
-              disabled={isPending} 
+              disabled={isPending}
             />
           </div>
 
@@ -98,38 +98,50 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
               disabled={isPending}
             />
           </div>
-          
+
+          <div className="form-field">
+            <label htmlFor="measurements">Medidas Técnicas</label>
+            <input
+              id="measurements"
+              name="measurements"
+              type="text"
+              defaultValue={wood?.measurements ?? ""}
+              placeholder="Ej: 1x4, 2x6, Dimensiones varias"
+              disabled={isPending}
+            />
+          </div>
+
           <div className="form-field checkbox-field">
-             <label>
-              <input 
-                type="checkbox" 
-                name="is_active" 
-                defaultChecked={wood ? wood.is_active : true} 
+            <label>
+              <input
+                type="checkbox"
+                name="is_active"
+                defaultChecked={wood ? wood.is_active : true}
                 disabled={isPending}
               />
               Producto activo (visible en catálogo)
-             </label>
+            </label>
           </div>
         </div>
 
         <div className="form-field" style={{ padding: "0 2rem" }}>
           <label htmlFor="short_description">Descripción corta (Catálogo)</label>
-          <textarea 
-            id="short_description" 
-            name="short_description" 
-            rows={2} 
-            defaultValue={wood?.short_description ?? ""} 
+          <textarea
+            id="short_description"
+            name="short_description"
+            rows={2}
+            defaultValue={wood?.short_description ?? ""}
             disabled={isPending}
           />
         </div>
 
         <div className="form-field" style={{ padding: "0 2rem", marginBottom: "2rem" }}>
           <label htmlFor="description">Descripción detallada (Página de producto)</label>
-          <textarea 
-            id="description" 
-            name="description" 
-            rows={5} 
-            defaultValue={wood?.description ?? ""} 
+          <textarea
+            id="description"
+            name="description"
+            rows={5}
+            defaultValue={wood?.description ?? ""}
             disabled={isPending}
           />
         </div>
