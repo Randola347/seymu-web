@@ -19,10 +19,10 @@ export const woodSchema = z.object({
   short_description: z.string().max(200, "La descripción corta es muy larga").optional().nullable(),
   description: z.string().optional().nullable(),
   price: z.coerce.number().positive("El precio debe ser un número positivo"),
-  availability: z.string().optional().nullable(),
   category: z.string().optional().nullable(),
   measurements: z.string().optional().nullable(),
   is_active: z.boolean().default(true),
+  is_featured: z.boolean().default(false),
 });
 
 export type CompanyInput = z.infer<typeof companySchema>;

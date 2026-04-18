@@ -1,0 +1,165 @@
+.maderas-page {
+    background: var(--background);
+    color: var(--foreground);
+}
+
+/* ─────────────────────────────────────────────
+   HERO
+   ───────────────────────────────────────────── */
+.maderas-hero {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(18, 47, 34, 0.96) 0%, rgba(18, 47, 34, 1) 100%);
+    padding: clamp(64px, 9vw, 110px) 0 clamp(56px, 8vw, 96px);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.maderas-hero-glow {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 80% 60% at 50% 110%,
+            rgba(163, 123, 84, 0.2) 0%,
+            transparent 70%);
+    pointer-events: none;
+}
+
+.maderas-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 980px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.maderas-hero-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(163, 123, 84, 0.14);
+    color: var(--accent-light);
+    border: 1px solid rgba(163, 123, 84, 0.28);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+}
+
+.maderas-hero-title {
+    margin: 0 0 20px;
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    color: #ffffff;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+}
+
+.maderas-hero-title strong {
+    font-style: normal;
+    font-weight: 700;
+}
+
+.maderas-hero-text {
+    max-width: 720px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.74);
+    font-size: clamp(1rem, 2vw, 1.12rem);
+    line-height: 1.75;
+}
+
+.maderas-hero-stats {
+    margin-top: clamp(28px, 5vw, 48px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.maderas-stat-card {
+    padding: 22px 18px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(6px);
+}
+
+.maderas-stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.1;
+}
+
+.maderas-stat-label {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: var(--accent-light);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────
+   CATÁLOGO
+   ───────────────────────────────────────────── */
+.maderas-catalog-section {
+    padding-top: clamp(56px, 7vw, 100px);
+}
+
+/* ─────────────────────────────────────────────
+   RESPONSIVE
+   ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .maderas-hero-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .maderas-stat-card:last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 640px) {
+    .maderas-hero {
+        border-radius: 0 0 18px 18px;
+    }
+
+    .maderas-hero-tag {
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        padding: 7px 14px;
+    }
+
+    .maderas-hero-title {
+        line-height: 1.12;
+    }
+
+    .maderas-hero-text {
+        max-width: 100%;
+        font-size: 0.98rem;
+    }
+
+    .maderas-hero-stats {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .maderas-stat-card:last-child {
+        grid-column: auto;
+    }
+
+    .maderas-stat-card {
+        padding: 18px 16px;
+        border-radius: 14px;
+    }
+
+    .maderas-stat-label {
+        font-size: 0.68rem;
+    }
+}

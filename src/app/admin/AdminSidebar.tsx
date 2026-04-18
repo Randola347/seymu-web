@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
@@ -8,7 +9,9 @@ import {
   Package, 
   LogOut, 
   ChevronRight,
-  ScrollText
+  ScrollText,
+  Menu,
+  X
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -21,43 +24,65 @@ const menuItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
-    <aside className="admin-sidebar">
-      <div className="sidebar-header">
-        <Link href="/" className="sidebar-logo">
-          Seymu Admin
-        </Link>
-      </div>
+    <>
+      {/* Backdrop for mobile */}
+      <div 
+        className={`sidebar-backdrop ${isOpen ? "show" : ""}`} 
+        onClick={() => setIsOpen(false)}
+      />
 
-      <nav className="sidebar-nav">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href;
-          
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`sidebar-link ${isActive ? "active" : ""}`}
-            >
-              <Icon size={20} />
-              <span>{item.name}</span>
-              {isActive && <ChevronRight size={16} className="active-arrow" />}
-            </Link>
-          );
-        })}
-      </nav>
+      {/* Toggle button for mobile */}
+      <button 
+        className="sidebar-mobile-toggle" 
+        onClick={toggleSidebar}
+        aria-label="Menu"
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-      <div className="sidebar-footer">
-        <button 
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="sidebar-logout"
-        >
-          <LogOut size={20} />
-          <span>Cerrar Sesión</span>
-        </button>
-      </div>
-    </aside>
+      <aside className={`admin-sidebar ${isOpen ? "open" : ""}`}>
+        <div className="sidebar-header">
+          <Link href="/" className="sidebar-logo" onClick={() => setIsOpen(false)}>
+            Seymu Admin
+          </Link>
+        </div>
+
+        <nav className="sidebar-nav">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+            
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`sidebar-link ${isActive ? "active" : ""}`}
+                onClick={() => setIsOpen(false)}
+              >
+                <Icon size={20} />
+                <span>{item.name}</span>
+                {isActive && <ChevronRight size={16} className="active-arrow" />}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="sidebar-footer">
+          <button 
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            className="sidebar-logout"
+          >
+            <LogOut size={20} />
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
+

@@ -11,6 +11,7 @@ export async function createWoodAction(prevState: any, formData: FormData) {
   const data = {
     ...rawData,
     is_active: rawData.is_active === "on" || rawData.is_active === "true",
+    is_featured: rawData.is_featured === "on" || rawData.is_featured === "true",
   };
 
   const validatedFields = woodSchema.safeParse(data);
@@ -46,6 +47,7 @@ export async function updateWoodAction(id: number, prevState: any, formData: For
   const data = {
     ...rawData,
     is_active: rawData.is_active === "on" || rawData.is_active === "true",
+    is_featured: rawData.is_featured === "on" || rawData.is_featured === "true",
   };
 
   const validatedFields = woodSchema.safeParse(data);
@@ -86,6 +88,18 @@ export async function toggleWoodStatusAction(id: number, isActive: boolean) {
     return { success: true };
   } catch (error) {
     return { success: false, message: "No se pudo cambiar el estado." };
+  }
+}
+
+export async function toggleWoodFeaturedAction(id: number, isFeatured: boolean) {
+  try {
+    const { updateWoodFeaturedStatus } = await import("@/lib/seymu-data");
+    await updateWoodFeaturedStatus(id, isFeatured);
+    revalidatePath("/admin/maderas");
+    revalidatePath("/");
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: "No se pudo cambiar el estado de destacado." };
   }
 }
 

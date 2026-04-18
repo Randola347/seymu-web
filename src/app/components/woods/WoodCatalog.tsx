@@ -1,17 +1,18 @@
-'use client';
+"use client";
 
-import { useState } from "react";
-import { SlidersHorizontal, ArrowRight, MessageCircle } from "lucide-react";
+import { useMemo, useState } from "react";
+import { SlidersHorizontal, ArrowRight, X } from "lucide-react";
 import Link from "next/link";
 
 interface Wood {
   id: number;
   name: string;
   slug: string;
-  category: string;
-  short_description: string;
+  category: string | null;
+  short_description: string | null;
   price: string;
-  main_image_url?: string;
+  main_image_url?: string | null;
+  firstImage?: string | null;
 }
 
 interface WoodCatalogProps {
@@ -20,101 +21,139 @@ interface WoodCatalogProps {
 
 export default function WoodCatalog({ woods }: WoodCatalogProps) {
   const [activeCategory, setActiveCategory] = useState("Todas");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const categories = ["Todas", ...Array.from(new Set(woods.map((w) => w.category))).filter(Boolean)];
+  const categories = useMemo(
+    () => [
+      "Todas",
+      ...Array.from(new Set(woods.map((w) => w.category))).filter(
+        (c): c is string => Boolean(c)
+      ),
+    ],
+    [woods]
+  );
 
-  const filteredWoods = activeCategory === "Todas" 
-    ? woods 
-    : woods.filter((w) => w.category === activeCategory);
+  const filteredWoods = useMemo(() => {
+    if (activeCategory === "Todas") return woods;
+    return woods.filter((w) => w.category === activeCategory);
+  }, [woods, activeCategory]);
+
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category);
+    setMobileFiltersOpen(false);
+  };
 
   return (
-    <div className="catalog-container">
-      {/* ── BARRA DE FILTROS ── */}
-      <div style={{ 
-        marginBottom: '40px', 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '20px', 
-        flexWrap: 'nowrap', 
-        overflowX: 'auto',
-        WebkitOverflowScrolling: 'touch',
-        background: '#fff',
-        padding: '20px',
-        borderRadius: 'var(--radius-md)',
-        boxShadow: 'var(--shadow-sm)',
-        border: '1px solid var(--border)',
-        msOverflowStyle: 'none',
-        scrollbarWidth: 'none'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--primary)', fontWeight: 700, fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', flexShrink: 0 }}>
-          <SlidersHorizontal size={18} />
-          Filtrar:
+    <div className="woods-catalog-shell">
+      <div className="woods-toolbar">
+        <div className="woods-toolbar-top">
+          <div>
+            <span className="woods-overline">Catálogo interactivo</span>
+            <h2 className="woods-title">Explora por categoría</h2>
+            <p className="woods-subtitle">
+              Selecciona una categoría para encontrar más rápido la madera que
+              necesitas.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="woods-mobile-filters-btn"
+            onClick={() => setMobileFiltersOpen((prev) => !prev)}
+            aria-expanded={mobileFiltersOpen}
+          >
+            {mobileFiltersOpen ? <X size={18} /> : <SlidersHorizontal size={18} />}
+            {mobileFiltersOpen ? "Cerrar filtros" : "Abrir filtros"}
+          </button>
         </div>
-        
-        <div className="filter-scroll" style={{ display: 'flex', gap: '8px', flexShrink: 0, paddingRight: '20px' }}>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              style={{
-                padding: '10px 22px',
-                borderRadius: '100px',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                background: activeCategory === cat ? 'var(--primary)' : 'var(--surface-alt)',
-                color: activeCategory === cat ? '#fff' : 'var(--foreground-muted)',
-                border: `1px solid ${activeCategory === cat ? 'var(--primary)' : 'var(--border)'}`,
-                userSelect: 'none',
-                WebkitTapHighlightColor: 'transparent',
-                flexShrink: 0
-              }}
-            >
-              {cat}
-            </button>
-          ))}
+
+        <div className={`woods-filters ${mobileFiltersOpen ? "show" : ""}`}>
+          <div className="woods-filter-row">
+            <div className="woods-filter-label">
+              <SlidersHorizontal size={18} />
+              <span>Filtrar:</span>
+            </div>
+
+            <div className="woods-chip-list woods-chip-list-scroll">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  className={`woods-chip ${activeCategory === cat ? "active" : ""}`}
+                  onClick={() => handleCategoryClick(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="woods-toolbar-meta">
+            <span>
+              {filteredWoods.length}{" "}
+              {filteredWoods.length === 1 ? "resultado" : "resultados"}
+            </span>
+
+            {activeCategory !== "Todas" && (
+              <button
+                type="button"
+                className="woods-clear-btn"
+                onClick={() => setActiveCategory("Todas")}
+              >
+                Limpiar filtro
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* ── GRID DE PRODUCTOS ── */}
-      <div className="wood-grid" style={{ minHeight: '400px' }}>
+      <div className="woods-grid-custom woods-grid-min-height">
         {filteredWoods.length > 0 ? (
-          filteredWoods.map((wood) => (
-            <article key={wood.id} className="premium-card" style={{ padding: '0', overflow: 'hidden' }}>
-              <div style={{ position: 'relative' }}>
-                <img 
-                  src={wood.main_image_url || "/assets/madera-placeholder.jpg"} 
-                  alt={wood.name}
-                  className="wood-card-img"
-                />
-                <div style={{ padding: '30px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <span className="hero-tag" style={{ fontSize: '0.65rem', marginBottom: '12px' }}>{wood.category}</span>
-                  <h3 style={{ fontSize: '1.4rem', marginBottom: '12px', color: 'var(--primary-dark)' }}>{wood.name}</h3>
-                  <p style={{ color: 'var(--foreground-muted)', fontSize: '0.9rem', marginBottom: '24px', flex: 1 }}>
-                    {wood.short_description}
+          filteredWoods.map((wood) => {
+            const imageUrl =
+              wood.main_image_url || wood.firstImage || "/assets/madera-placeholder.jpg";
+
+            return (
+              <article key={wood.id} className="wood-card">
+                <div className="wood-card-media">
+                  <img
+                    src={imageUrl}
+                    alt={wood.name}
+                    className="wood-card-image"
+                  />
+                </div>
+
+                <div className="wood-card-body">
+                  {wood.category ? (
+                    <span className="wood-card-category">{wood.category}</span>
+                  ) : null}
+
+                  <h3 className="wood-card-title">{wood.name}</h3>
+
+                  <p className="wood-card-description">
+                    {wood.short_description || "Madera seleccionada con altos estándares de calidad."}
                   </p>
-                  
-                  <div style={{ marginTop: 'auto' }}>
-                    <div style={{ marginBottom: '20px', color: 'var(--primary)', fontWeight: 700, fontSize: '1.2rem' }}>
+
+                  <div className="wood-card-footer">
+                    <span className="wood-card-price">
                       ₡{Number(wood.price).toLocaleString("es-CR")}
-                    </div>
+                    </span>
+
                     <Link
                       href={`/maderas/${wood.slug}`}
-                      className="btn-premium btn-premium-primary"
-                      style={{ width: '100%', justifyContent: 'center', textAlign: 'center', gap: '10px' }}
+                      className="btn-premium btn-premium-primary wood-card-btn"
                     >
                       Ver Detalles
                       <ArrowRight size={16} />
                     </Link>
                   </div>
                 </div>
-              </div>
-            </article>
-          ))
+              </article>
+            );
+          })
         ) : (
-          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '100px 0', border: '1px dashed var(--border)', borderRadius: 'var(--radius-lg)' }}>
-            <p style={{ fontSize: '1.2rem', color: 'var(--foreground-muted)' }}>No se encontraron maderas en esta categoría.</p>
+          <div className="woods-empty-state premium-card woods-empty-full">
+            <p>No se encontraron maderas en esta categoría.</p>
           </div>
         )}
       </div>

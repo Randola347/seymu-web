@@ -7,18 +7,5 @@ export default async function EmpresaPage() {
   const company = await getCompanySettings();
   const identity = await getSiteIdentity();
 
-  return (
-    <div className="admin-form-container">
-      <div className="admin-header">
-        <div>
-          <h1 className="page-title">Configuración de Empresa</h1>
-          <p className="page-text">
-            Administrá los datos de contacto y la identidad visual de Seymu.
-          </p>
-        </div>
-      </div>
-
-      <EmpresaForm company={company} identity={identity} />
-    </div>
-  );
-}
+  return <EmpresaForm company={company} identity={identity} />;
+}

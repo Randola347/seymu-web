@@ -1,135 +1,171 @@
-import { getAboutUs, getCompanySettings } from "@/lib/seymu-data";
+import { getAboutUs } from "@/lib/seymu-data";
+import "./nosotros.css";
 
 export const dynamic = "force-dynamic";
 
 export default async function NosotrosPage() {
   const aboutUs = await getAboutUs();
-  const company = await getCompanySettings();
 
-  // Función para procesar y limpiar el texto de la historia
-  const processHistory = (content: string) => {
-    if (!content) return [];
-    
-    // Dividimos por saltos de línea dobles para identificar párrafos reales
-    const paragraphs = content.split(/\n\s*\n/).filter(p => p.trim().length > 0);
-    
-    return paragraphs.map(p => {
-      // Buscamos un año (4 dígitos) en el texto del párrafo
-      const yearMatch = p.match(/\b(20[0-9]{2}|19[0-9]{2})\b/);
-      // Si el párrafo menciona "Hoy" o similar
-      const isToday = p.toLowerCase().includes("hoy en día") || p.toLowerCase().includes("actualmente");
-      
-      return {
-        text: p.trim(),
-        year: yearMatch ? yearMatch[0] : (isToday ? "Hoy" : null)
-      };
-    });
-  };
+  const historyPoints = [
+    {
+      year: "2008",
+      title: "Fundación",
+      description:
+        "Iniciamos operaciones con el propósito de ofrecer maderas de alta calidad, atención cercana y soluciones confiables para proyectos residenciales y comerciales.",
+    },
+    {
+      year: "2010",
+      title: "Consolidación",
+      description:
+        "Fortalecimos relaciones con talleres, ebanistas y clientes del sector construcción, consolidando una reputación basada en servicio y confianza.",
+    },
+    {
+      year: "2012",
+      title: "Sostenibilidad",
+      description:
+        "Reforzamos criterios de selección responsable para trabajar con materiales provenientes de fuentes legales y manejo forestal consciente.",
+    },
+    {
+      year: "2017",
+      title: "Digitalización",
+      description:
+        "Incorporamos canales digitales y una operación más ágil para mejorar la atención, la exhibición del catálogo y la coordinación logística.",
+    },
+    {
+      year: "Actualidad",
+      title: "Proyección",
+      description:
+        "Seguimos evolucionando con una visión enfocada en calidad, continuidad operativa y una experiencia de compra más moderna para nuestros clientes.",
+    },
+  ];
 
-  const historyBlocks = processHistory(aboutUs?.history_content || "");
+  const values = ["Calidad", "Confianza", "Sostenibilidad", "Atención cercana"];
+
+  const historyText =
+    aboutUs?.history_content ||
+    `Desde nuestros inicios, en Maderas Seymu nos hemos enfocado en ofrecer materiales de alta calidad y una atención cercana a cada cliente.
+
+Nuestra experiencia se ha construido con trabajo constante, conocimiento del producto y una relación de confianza con quienes desarrollan, diseñan o construyen.
+
+Cada etapa de nuestro crecimiento ha estado marcada por el compromiso con la calidad, la responsabilidad en la selección de materiales y la búsqueda de una experiencia de compra más profesional.
+
+Hoy seguimos proyectándonos como una empresa sólida, moderna y confiable dentro del sector maderero en Costa Rica.`;
+
+  const historyParagraphs = historyText
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
 
   return (
-    <main style={{ background: 'var(--background)' }}>
-      {/* ── HERO EDITORIAL ── */}
-      <section 
-        style={{ 
-          height: '25vh', 
-          background: 'var(--primary-dark)', 
-          position: 'relative', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          overflow: 'hidden',
-          textAlign: 'center'
-        }}
-      >
-        <div style={{ position: 'relative', zIndex: 10 }}>
-          <span className="hero-tag" style={{ border: '1px solid rgba(255,255,255,0.3)', background: 'transparent', color: '#fff' }}>
-            Nuestra Historia
-          </span>
-          <h1 style={{ 
-            fontFamily: 'var(--font-display)', 
-            fontSize: 'clamp(3rem, 8vw, 6rem)', 
-            color: '#fff',
-            marginTop: '20px',
-            textTransform: 'uppercase',
-            letterSpacing: '4px'
-          }}>
-            {company?.company_name || "Seymu"}
-          </h1>
-        </div>
-      </section>
+    <main className="nosotros-page">
+      <section className="nosotros-hero">
+        <div className="container">
+          <div className="nosotros-hero-grid">
+            <div className="nosotros-hero-copy">
+              <span className="nosotros-hero-tag anim-up anim-up-1">
+                Maderas Finas Seymu
+              </span>
 
-      {/* ── NARRATIVA CORPORATIVA ── */}
-      <section className="page-section" style={{ padding: '100px 0' }}>
-        <div className="container" style={{ maxWidth: '800px' }}>
-          
-          <header style={{ textAlign: 'center', marginBottom: '80px' }}>
-            <h1 style={{ 
-              fontFamily: 'var(--font-display)', 
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)', 
-              color: 'var(--primary-dark)',
-              marginTop: '16px'
-            }}>
-              Calidad que trasciende
-            </h1>
-          </header>
+              <h1 className="nosotros-hero-title anim-up anim-up-2">
+                Madera que <em>cuenta</em> historias.
+              </h1>
 
-          <div className="editorial-story" style={{ color: 'var(--foreground)' }}>
-            
-            {/* Historia Procesada Dinámicamente */}
-            <div style={{ position: 'relative' }}>
-              {historyBlocks.map((block, idx) => (
-                <div key={idx} className="nosotros-timeline-item" style={{ marginTop: idx > 0 ? '120px' : '0' }}>
-                  {/* Indicador de Año dinámico con margen inferior corregido */}
-                  {block.year && (
-                    <div className="nosotros-year-container" style={{ marginBottom: '15px' }}>
-                      <span style={{ 
-                        display: 'block', 
-                        fontFamily: 'var(--font-display)', 
-                        fontSize: '2.5rem', 
-                        fontWeight: 800, 
-                        color: 'var(--accent)',
-                        lineHeight: 1,
-                        opacity: 0.5
-                      }}>
-                        {block.year}
-                      </span>
-                    </div>
-                  )}
-                  
-                  <div className="nosotros-history-text" style={{ 
-                    fontSize: '1.2rem',
-                    lineHeight: 1.8,
-                    textAlign: 'justify',
-                    color: 'var(--foreground-muted)'
-                  }}>
-                    {block.text}
-                  </div>
-                </div>
-              ))}
-            </div>
+              <p className="nosotros-hero-text anim-up anim-up-3">
+                Seleccionamos y distribuimos maderas con enfoque técnico,
+                atención personalizada y compromiso con la calidad en cada
+                proyecto.
+              </p>
 
-            {/* Misión y Visión con Diseño Sobrio */}
-            <div style={{ 
-              marginTop: '100px', 
-              padding: '60px 40px', 
-              background: 'var(--surface-alt)', 
-              borderRadius: 'var(--radius-lg)',
-              border: '1px solid var(--border)'
-            }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '60px' }}>
-                <div>
-                  <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', color: 'var(--primary)' }}>Nuestra Visión</h3>
-                  <p style={{ lineHeight: 1.7, opacity: 0.8 }}>{aboutUs?.vision_content}</p>
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '1.5rem', marginBottom: '20px', color: 'var(--primary)' }}>Nuestra Misión</h3>
-                  <p style={{ lineHeight: 1.7, opacity: 0.8 }}>{aboutUs?.mission_content}</p>
-                </div>
+              <div className="nosotros-hero-pills anim-up anim-up-4">
+                {values.map((value) => (
+                  <span key={value} className="nosotros-hero-pill">
+                    {value}
+                  </span>
+                ))}
               </div>
             </div>
 
+            <aside className="nosotros-hero-panel anim-up anim-up-3">
+              <span className="nosotros-panel-label">Nuestra esencia</span>
+              <p>
+                Trabajamos con criterio, detalle y una visión enfocada en
+                brindar materiales confiables para quienes valoran la calidad y
+                la buena atención.
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section className="nosotros-identidad">
+        <div className="container">
+          <div className="nosotros-section-head anim-up anim-up-1">
+            <span>Quiénes somos</span>
+            <h2>
+              Una empresa construida sobre confianza, detalle y continuidad.
+            </h2>
+          </div>
+
+          <div className="nosotros-identidad-layout anim-up anim-up-2">
+            <article className="nosotros-id-story">
+              <span className="nosotros-card-eyebrow">Nuestra historia</span>
+              <h3>Compromiso con cada pieza, desde el origen hasta el destino.</h3>
+
+              <div className="nosotros-id-story-flow">
+                {historyParagraphs.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
+              </div>
+            </article>
+
+            <div className="nosotros-id-side">
+              <article className="nosotros-id-card">
+                <span className="nosotros-card-eyebrow">Misión</span>
+                <h3>Calidad que transforma</h3>
+                <p>
+                  {aboutUs?.mission_content ||
+                    "Brindar soluciones madereras de alta calidad, acompañando a nuestros clientes con productos confiables, atención responsable y compromiso con la excelencia."}
+                </p>
+              </article>
+
+              <article className="nosotros-id-card">
+                <span className="nosotros-card-eyebrow">Visión</span>
+                <h3>Referente de confianza</h3>
+                <p>
+                  {aboutUs?.vision_content ||
+                    "Ser una empresa reconocida por la calidad de sus maderas, la solidez de su servicio y una operación alineada con prácticas responsables y sostenibles."}
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="nosotros-trayectoria">
+        <div className="container">
+          <div className="nosotros-tray-header anim-up anim-up-1">
+            <span>Trayectoria</span>
+            <h2>Nuestra evolución</h2>
+            <p>
+              Una línea de tiempo clara ayuda a transmitir solidez, experiencia
+              y crecimiento continuo.
+            </p>
+          </div>
+
+          <div className="nosotros-tray-grid anim-up anim-up-2">
+            {historyPoints.map((point, index) => (
+              <article key={index} className="nosotros-tray-item">
+                <div className="nosotros-tray-top">
+                  <span className="nosotros-tray-step">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="nosotros-tray-year">{point.year}</span>
+                </div>
+
+                <h3 className="nosotros-tray-title">{point.title}</h3>
+                <p className="nosotros-tray-desc">{point.description}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
