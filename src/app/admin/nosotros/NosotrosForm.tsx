@@ -4,7 +4,7 @@ import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { saveNosotrosAction } from "./actions";
 import type { AboutUs } from "@/lib/seymu-data";
-import { ScrollText, Target, Eye } from "lucide-react";
+import { ScrollText, Target, Eye, Save } from "lucide-react";
 
 export default function NosotrosForm({ content }: { content: AboutUs | null }) {
   const [state, formAction, isPending] = useActionState(saveNosotrosAction, {
@@ -76,10 +76,12 @@ export default function NosotrosForm({ content }: { content: AboutUs | null }) {
       </div>
 
       <div className="form-actions">
-        <button type="submit" className="btn-primary" disabled={isPending}>
+        <button type="submit" className="btn-primary btn-icon-labeled" disabled={isPending}>
+          <Save size={18} />
           {isPending ? "Guardando..." : "Guardar Contenido"}
         </button>
       </div>
+
     </form>
   );
 }

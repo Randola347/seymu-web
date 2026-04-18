@@ -2,11 +2,11 @@
 
 import { CldUploadWidget } from "next-cloudinary";
 import { useState } from "react";
-import { Image as ImageIcon, Upload } from "lucide-react";
+import { Upload, Image as ImageIcon } from "lucide-react";
 
 interface EmpresaImageUploaderProps {
   label: string;
-  name: string; // The form field name
+  name: string;
   currentUrl?: string | null;
 }
 
@@ -25,9 +25,9 @@ export default function EmpresaImageUploader({ label, name, currentUrl }: Empres
             className="empresa-preview-img" 
           />
         ) : (
-          <div className="empresa-preview-placeholder">
-            <ImageIcon size={40} />
-            <span>Sin {label.toLowerCase()}</span>
+          <div style={{ padding: '20px', textAlign: 'center', color: '#cbd5e0' }}>
+            <ImageIcon size={32} />
+            <p style={{ fontSize: '0.8rem' }}>Sin imagen</p>
           </div>
         )}
 
@@ -40,10 +40,6 @@ export default function EmpresaImageUploader({ label, name, currentUrl }: Empres
             multiple: false,
             maxFiles: 1,
             resourceType: "image",
-            clientAllowedFormats: ["jpg", "jpeg", "png", "webp"],
-            maxFileSize: 5000000,
-            sources: ["local", "camera", "url"],
-            folder: "seymu/identity",
             language: "es",
           }}
           onSuccess={(results: any) => {
@@ -56,11 +52,11 @@ export default function EmpresaImageUploader({ label, name, currentUrl }: Empres
             <button
               type="button"
               onClick={() => open()}
-              className="btn-outline-small"
-              style={{ marginTop: "0.5rem" }}
+              className="btn-secondary"
+              style={{ padding: '8px 16px', fontSize: '0.85rem', alignSelf: 'flex-start' }}
             >
-              <Upload size={16} />
-              Cambiar {label}
+              <Upload size={14} style={{ marginRight: '6px' }} />
+              Subir Imagen
             </button>
           )}
         </CldUploadWidget>

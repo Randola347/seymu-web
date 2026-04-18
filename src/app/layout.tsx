@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="es" data-scroll-behavior="smooth">
       <body>
-        <Toaster position="top-right" richColors />
+        <Toaster position="bottom-right" richColors />
         {children}
       </body>
     </html>

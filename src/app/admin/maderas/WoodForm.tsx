@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { createWoodAction, updateWoodAction } from "./actions";
 import type { Wood } from "@/lib/seymu-data";
 import Link from "next/link";
+import { Save, ArrowLeft, Star, MonitorCheck } from "lucide-react";
 
 interface WoodFormProps {
   wood?: Wood | null;
@@ -30,18 +31,19 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
   }, [state]);
 
   return (
-    <div className="container admin-form-container">
+    <div className="admin-form-container">
       <div className="admin-header">
         <div>
-          <h1 className="page-title">{mode === "create" ? "Nueva madera" : `Editar: ${wood?.name}`}</h1>
+          <h1 className="page-title">{mode === "create" ? "Nueva Madera" : wood?.name}</h1>
           <p className="page-text">
             {mode === "create"
-              ? "Creá una nueva madera para el catálogo."
-              : "Actualizá la información técnica y comercial de esta madera."}
+              ? "Agregá una nueva especie de madera al catálogo."
+              : "Editá la información técnica y comercial de esta madera."}
           </p>
         </div>
 
-        <Link href="/admin/maderas" className="btn-secondary">
+        <Link href="/admin/maderas" className="btn-secondary btn-icon-labeled">
+          <ArrowLeft size={16} />
           Volver
         </Link>
       </div>
@@ -89,43 +91,48 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
           </div>
 
           <div className="form-field">
-            <label htmlFor="availability">Disponibilidad</label>
-            <input
-              id="availability"
-              name="availability"
-              type="text"
-              defaultValue={wood?.availability ?? "Disponible"}
-              disabled={isPending}
-            />
-          </div>
-
-          <div className="form-field">
             <label htmlFor="measurements">Medidas Técnicas</label>
             <input
               id="measurements"
               name="measurements"
               type="text"
               defaultValue={wood?.measurements ?? ""}
-              placeholder="Ej: 1x4, 2x6, Dimensiones varias"
+              placeholder='Ej: 1"x4", 2"x6"...'
               disabled={isPending}
             />
           </div>
 
           <div className="form-field checkbox-field">
-            <label>
+             <input
+                type="checkbox"
+                name="is_featured"
+                id="is_featured"
+                defaultChecked={wood?.is_featured ?? false}
+                disabled={isPending}
+              />
+              <label htmlFor="is_featured">
+                <Star size={16} color="var(--accent)" fill={wood?.is_featured ? "var(--accent)" : "none"} />
+                Producto Destacado (Ver en Inicio)
+              </label>
+          </div>
+
+          <div className="form-field checkbox-field">
               <input
                 type="checkbox"
                 name="is_active"
+                id="is_active"
                 defaultChecked={wood ? wood.is_active : true}
                 disabled={isPending}
               />
-              Producto activo (visible en catálogo)
-            </label>
+              <label htmlFor="is_active">
+                <MonitorCheck size={16} color="var(--primary)" />
+                Producto Activo (Visible en Catálogo)
+              </label>
           </div>
         </div>
 
-        <div className="form-field" style={{ padding: "0 2rem" }}>
-          <label htmlFor="short_description">Descripción corta (Catálogo)</label>
+        <div className="form-field mb-24">
+          <label htmlFor="short_description">Descripción corta</label>
           <textarea
             id="short_description"
             name="short_description"
@@ -135,8 +142,8 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
           />
         </div>
 
-        <div className="form-field" style={{ padding: "0 2rem", marginBottom: "2rem" }}>
-          <label htmlFor="description">Descripción detallada (Página de producto)</label>
+        <div className="form-field">
+          <label htmlFor="description">Descripción detallada</label>
           <textarea
             id="description"
             name="description"
@@ -147,11 +154,13 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
         </div>
 
         <div className="form-actions">
-          <button type="submit" className="btn-primary" disabled={isPending}>
+          <button type="submit" className="btn-primary btn-icon-labeled" disabled={isPending}>
+            <Save size={18} />
             {isPending ? "Guardando..." : "Guardar madera"}
           </button>
         </div>
       </form>
+
     </div>
   );
 }

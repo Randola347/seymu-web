@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getAllWoods, getCompanySettings } from "@/lib/seymu-data";
-import { Settings, Package, ArrowRight, Info } from "lucide-react";
+import { Settings, Package, ArrowRight, Info, TrendingUp, Users } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -9,71 +9,73 @@ export default async function AdminPage() {
   const company = await getCompanySettings();
   
   const activeWoods = woods.filter(w => w.is_active).length;
+  const featuredWoods = woods.filter(w => w.is_featured).length;
 
   return (
-    <div>
+    <div className="admin-form-container">
       <div className="admin-header">
         <div>
           <h1 className="page-title">Panel de Control</h1>
           <p className="page-text">
-            Bienvenido al centro de administración de Seymu. Aquí puedes ver el resumen de tu negocio.
+            Bienvenido al centro de administración de Seymu. Gestioná tu negocio con facilidad.
           </p>
         </div>
       </div>
 
-      <div className="admin-grid" style={{ marginBottom: "3rem" }}>
-        <div className="admin-card stats-card">
-          <div className="stats-icon primary">
+      <div className="admin-grid mb-40">
+        <div className="admin-form-card stats-card">
+          <div className="stats-icon wood">
             <Package size={24} />
           </div>
           <div>
-            <h3 className="stats-label">Maderas en Catálogo</h3>
+            <h3 className="stats-label">Total Especies</h3>
             <p className="stats-value">{woods.length}</p>
-            <p className="stats-sub">{activeWoods} activas públicamente</p>
+            <p className="stats-sub">{activeWoods} activas en la web</p>
           </div>
         </div>
 
-        <div className="admin-card stats-card">
-          <div className="stats-icon accent">
-            <Info size={24} />
+        <div className="admin-form-card stats-card">
+          <div className="stats-icon featured">
+            <TrendingUp size={24} />
           </div>
           <div>
-            <h3 className="stats-label">Información de Empresa</h3>
-            <p className="stats-value">{company ? "Configurada" : "Incompleta"}</p>
-            <p className="stats-sub">{company?.company_name || "Sin nombre"}</p>
+            <h3 className="stats-label">Destacados</h3>
+            <p className="stats-value">{featuredWoods}</p>
+            <p className="stats-sub">En escaparate de Inicio</p>
           </div>
         </div>
       </div>
 
       <div className="admin-grid">
-        <article className="admin-card">
-          <div className="card-header-icon">
-            <Settings size={22} />
+        <article className="admin-form-card board-card">
+          <div className="board-icon" style={{ background: 'var(--primary-dark)', color: '#fff' }}>
+            <Settings size={20} />
           </div>
-          <h2 className="admin-card-title">Gestión de Empresa</h2>
-          <p className="admin-card-text">
-            Cambia el nombre, contacto de WhatsApp, redes sociales e identidad visual.
+          <h2>Identidad de Empresa</h2>
+          <p>
+            Actualizá el nombre, contacto de WhatsApp, slogan e identidad visual (logo y banners).
           </p>
-          <Link href="/admin/empresa" className="btn-primary">
-            Editar Configuración
+          <Link href="/admin/empresa" className="btn-primary btn-icon-labeled" style={{ justifyContent: 'center' }}>
+            Gestionar Perfil
             <ArrowRight size={16} />
           </Link>
         </article>
 
-        <article className="admin-card">
-          <div className="card-header-icon">
-            <Package size={22} />
+        <article className="admin-form-card board-card">
+          <div className="board-icon" style={{ background: 'var(--accent)', color: '#fff' }}>
+            <Package size={20} />
           </div>
-          <h2 className="admin-card-title">Catálogo de Maderas</h2>
-          <p className="admin-card-text">
-            Sube nuevos productos, ajusta precios y añade fotos para que tus clientes las vean.
+          <h2>Gestión de Maderas</h2>
+          <p>
+            Agregá nuevas especies, cambiá precios, marcá favoritos y gestioná la galería de fotos.
           </p>
-          <Link href="/admin/maderas" className="btn-primary">
+          <Link href="/admin/maderas" className="btn-primary btn-icon-labeled" style={{ justifyContent: 'center' }}>
             Ir al Inventario
             <ArrowRight size={16} />
           </Link>
         </article>
       </div>
+
     </div>
   );
 }

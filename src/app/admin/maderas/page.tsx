@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { getAllWoods } from "@/lib/seymu-data";
 import WoodStatusToggle from "./WoodStatusToggle";
+import WoodFeaturedToggle from "./WoodFeaturedToggle";
 import WoodDeleteButton from "./WoodDeleteButton";
 import WoodImageUploader from "@/app/components/admin/WoodImageUploader";
-import { Plus, Edit2 } from "lucide-react";
+import { Plus, Edit2, TreeDeciduous, Star } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +12,7 @@ export default async function AdminMaderasPage() {
   const woods = await getAllWoods();
 
   return (
-    <div>
+    <div className="admin-form-container">
       <div className="admin-header">
         <div>
           <h1 className="page-title">Inventario de Maderas</h1>
@@ -20,7 +21,7 @@ export default async function AdminMaderasPage() {
           </p>
         </div>
 
-        <Link href="/admin/maderas/nueva" className="btn-primary">
+        <Link href="/admin/maderas/nueva" className="btn-primary btn-icon-labeled">
           <Plus size={18} />
           Nueva madera
         </Link>
@@ -29,6 +30,23 @@ export default async function AdminMaderasPage() {
       <div className="admin-woods-grid">
         {woods.map((wood) => (
           <article key={wood.id} className="wood-card">
+            {/* Imagen Preview */}
+            <div className="wood-card-preview">
+              {wood.main_image_url ? (
+                <img src={wood.main_image_url} alt={wood.name} />
+              ) : (
+                <div className="wood-empty-preview">
+                   <TreeDeciduous size={48} />
+                </div>
+              )}
+              {wood.is_featured && (
+                <div className="featured-badge">
+                  <Star size={10} fill="white" /> DESTACADO
+                </div>
+              )}
+            </div>
+
+
             <div className="wood-card-body">
               <div className="admin-status-row">
                 <span className="wood-category">{wood.category ?? "Sin categoría"}</span>
@@ -50,14 +68,15 @@ export default async function AdminMaderasPage() {
               <div className="admin-actions">
                 <Link
                   href={`/admin/maderas/${wood.id}/editar`}
-                  className="btn-secondary"
+                  className="btn-secondary btn-icon-labeled"
                   title="Editar detalles"
                 >
-                  <Edit2 size={16} />
-                  Editar
+                  <Edit2 size={14} />
+                  Detalles
                 </Link>
 
                 <WoodStatusToggle id={wood.id} initialStatus={wood.is_active} />
+                <WoodFeaturedToggle id={wood.id} initialStatus={wood.is_featured} />
                 
                 <WoodDeleteButton id={wood.id} name={wood.name} />
               </div>
