@@ -22,7 +22,6 @@ interface WoodCatalogProps {
 
 export default function WoodCatalog({ woods }: WoodCatalogProps) {
   const [activeCategory, setActiveCategory] = useState("Todas");
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const categories = useMemo(
     () => [
@@ -40,8 +39,8 @@ export default function WoodCatalog({ woods }: WoodCatalogProps) {
   }, [woods, activeCategory]);
 
   const handleCategoryClick = (category: string) => {
-    setActiveCategory(category);
-    setMobileFiltersOpen(false);
+    // Force a clean state update
+    setActiveCategory(() => category);
   };
 
   return (
@@ -50,31 +49,15 @@ export default function WoodCatalog({ woods }: WoodCatalogProps) {
         <div className="woods-toolbar-top">
           <div>
             <span className="woods-overline">Catálogo interactivo</span>
-            <h2 className="woods-title">Explora por categoría</h2>
+            <h2 className="woods-title">Maderas Premium</h2>
             <p className="woods-subtitle">
-              Selecciona una categoría para encontrar más rápido la madera que
-              necesitas.
+              Selecciona una categoría para filtrar. Desliza lateralmente para ver más.
             </p>
           </div>
-
-          <button
-            type="button"
-            className="woods-mobile-filters-btn"
-            onClick={() => setMobileFiltersOpen((prev) => !prev)}
-            aria-expanded={mobileFiltersOpen}
-          >
-            {mobileFiltersOpen ? <X size={18} style={{ pointerEvents: "none" }} /> : <SlidersHorizontal size={18} style={{ pointerEvents: "none" }} />}
-            {mobileFiltersOpen ? "Cerrar filtros" : "Abrir filtros"}
-          </button>
         </div>
 
-        <div className={`woods-filters ${mobileFiltersOpen ? "show" : ""}`}>
+        <div className="woods-filters">
           <div className="woods-filter-row">
-            <div className="woods-filter-label">
-              <SlidersHorizontal size={18} />
-              <span>Filtrar:</span>
-            </div>
-
             <div className="woods-chip-list woods-chip-list-scroll">
               {categories.map((cat) => (
                 <button
@@ -87,13 +70,13 @@ export default function WoodCatalog({ woods }: WoodCatalogProps) {
                 </button>
               ))}
             </div>
+            <span className="woods-scroll-hint mobile-only">Desliza para ver más →</span>
           </div>
 
           <div className="woods-toolbar-meta">
-            <span>
-              {filteredWoods.length}{" "}
-              {filteredWoods.length === 1 ? "resultado" : "resultados"}
-            </span>
+            <div className="woods-results-count">
+              <span>{filteredWoods.length}</span> {filteredWoods.length === 1 ? "madera encontrada" : "maderas encontradas"}
+            </div>
 
             {activeCategory !== "Todas" && (
               <button
@@ -101,7 +84,7 @@ export default function WoodCatalog({ woods }: WoodCatalogProps) {
                 className="woods-clear-btn"
                 onClick={() => setActiveCategory("Todas")}
               >
-                Limpiar filtro
+                Limpiar filtros
               </button>
             )}
           </div>
@@ -121,14 +104,14 @@ export default function WoodCatalog({ woods }: WoodCatalogProps) {
                     src={imageUrl}
                     alt={wood.name}
                     className="wood-card-image"
+                    loading="lazy"
                   />
+                  {wood.category && (
+                    <span className="wood-card-category-badge">{wood.category}</span>
+                  )}
                 </div>
 
                 <div className="wood-card-body">
-                  {wood.category ? (
-                    <span className="wood-card-category">{wood.category}</span>
-                  ) : null}
-
                   <h3 className="wood-card-title">{wood.name}</h3>
 
                   <p className="wood-card-description">
@@ -144,7 +127,7 @@ export default function WoodCatalog({ woods }: WoodCatalogProps) {
                       href={`/maderas/${wood.slug}`}
                       className="btn-premium btn-premium-primary wood-card-btn"
                     >
-                      Ver Detalles
+                      Ver madera
                       <ArrowRight size={16} />
                     </Link>
                   </div>
@@ -153,11 +136,11 @@ export default function WoodCatalog({ woods }: WoodCatalogProps) {
             );
           })
         ) : (
-          <div className="woods-empty-state premium-card woods-empty-full">
-            <p>No se encontraron maderas en esta categoría.</p>
+          <div className="woods-empty-state">
+            <p>No hay maderas disponibles en esta categoría.</p>
           </div>
         )}
       </div>
     </div>
   );
-}
+}

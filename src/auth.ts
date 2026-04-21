@@ -61,7 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnAdmin = nextUrl.pathname.startsWith("/admin");
+      const isOnAdmin = nextUrl.pathname.startsWith("/seymu-gestion");
       
       if (isOnAdmin) {
         if (isLoggedIn) return true;

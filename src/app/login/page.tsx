@@ -4,7 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Eye, EyeOff, ShieldCheck, Leaf, ArrowRight } from "lucide-react";
-import "../admin/admin.css";
+import "../seymu-gestion/admin.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ export default function LoginPage() {
           setError("Credenciales incorrectas. Inténtalo de nuevo.");
         }
       } else {
-        router.push("/admin");
+        router.push("/seymu-gestion");
         router.refresh();
       }
     } catch (err: any) {

@@ -161,80 +161,86 @@
    ───────────────────────────────────────────── */
 @media (max-width: 768px) {
   .site-header {
-    height: 78px;
-  }
-
-  .site-header.scrolled {
     height: 72px;
   }
 
-  .mobile-menu-toggle {
-    display: inline-flex;
+  .site-header.scrolled {
+    height: 64px;
+  }
+
+  .site-header-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 15px;
   }
 
   .site-logo-img,
   .site-logo img {
-    height: 58px;
+    height: 52px;
+  }
+
+  .site-header.scrolled .site-logo-img,
+  .site-header.scrolled .site-logo img {
+    height: 44px;
   }
 
   .site-logo-text {
-    font-size: 1.18rem;
+    font-size: 1.1rem;
   }
 
   .site-nav {
-    position: fixed;
-    top: calc(78px + 10px);
-    left: 12px;
-    right: 12px;
-    height: auto;
-    min-height: unset;
-    background: rgba(255, 255, 255, 0.98);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.12);
-    backdrop-filter: blur(14px);
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 8px;
-    padding: 16px;
-    transform: translateY(-14px);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: all 0.3s ease;
-    z-index: 1600;
-  }
-
-  .site-header.scrolled + .site-nav {
-    top: calc(72px + 10px);
-  }
-
-  .site-nav.open {
-    transform: translateY(0);
+    position: static;
+    flex-direction: row;
+    background: transparent;
+    padding: 0;
+    gap: 16px;
+    box-shadow: none;
+    border: none;
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+    transform: none;
+    width: auto;
   }
 
   .nav-link {
-    width: 100%;
-    padding: 14px 16px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-family: var(--font-body);
-    color: var(--primary-dark);
-    background: transparent;
+    font-size: 0.9rem;
+    padding: 8px 0;
+    font-weight: 700;
   }
 
   .nav-link::after {
-    display: none;
+    display: block;
+    height: 2px;
+  }
+}
+
+@media (max-width: 500px) {
+  .site-header-inner {
+    gap: 10px;
   }
 
-  .nav-link:hover,
-  .nav-link.active {
-    background: var(--primary-ghost);
-    color: var(--primary);
+  .site-nav {
+    gap: 12px;
+  }
+  
+  .nav-link {
+    font-size: 0.85rem;
+  }
+
+  .site-logo-img,
+  .site-logo img {
+    height: 44px;
+  }
+}
+
+@media (max-width: 380px) {
+  .site-nav {
+    gap: 8px;
+  }
+  
+  .nav-link {
+    font-size: 0.78rem;
   }
 }

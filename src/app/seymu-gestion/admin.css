@@ -166,21 +166,21 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 40px;
-  padding-bottom: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
 
 .page-title {
-  font-size: 2.2rem;
+  font-size: 1.6rem;
   font-family: var(--font-display);
   color: var(--primary-dark);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .page-text {
   color: var(--foreground-muted);
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 /* Admin Forms & Cards */
@@ -191,7 +191,7 @@
 
 .admin-form-card {
   background: #fff;
-  padding: 40px;
+  padding: 24px 30px;
   border-radius: var(--radius-md);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   border: 1px solid #edf2f7;
@@ -200,8 +200,8 @@
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  margin-bottom: 32px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {
@@ -213,12 +213,12 @@
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .form-field label {
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: #4a5568;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -227,11 +227,11 @@
 .form-field input,
 .form-field textarea,
 .form-field select {
-  padding: 12px 16px;
+  padding: 10px 14px;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.95rem;
   transition: all 0.2s ease;
   background: #fdfdfd;
 }
@@ -295,8 +295,8 @@
   grid-column: span 2;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 20px;
+  gap: 12px;
+  padding: 16px;
   background: #f8fafc;
   border-radius: 8px;
   border: 1px dashed #cbd5e0;
@@ -309,8 +309,8 @@
 }
 
 .empresa-preview-img {
-  max-width: 300px;
-  max-height: 200px;
+  max-width: 240px;
+  max-height: 120px;
   object-fit: contain;
   border-radius: 4px;
   box-shadow: var(--shadow-sm);

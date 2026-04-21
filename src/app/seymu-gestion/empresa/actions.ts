@@ -50,7 +50,7 @@ export async function saveCompanySettingsAction(prevState: any, formData: FormDa
 
     revalidatePath("/");
     revalidatePath("/contacto");
-    revalidatePath("/admin/empresa");
+    revalidatePath("/seymu-gestion/empresa");
     revalidatePath("/nosotros");
 
     return {

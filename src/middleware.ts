@@ -12,7 +12,7 @@ const MAX_ATTEMPTS = 5;
 export default auth((req: NextRequest & { auth: any }) => {
   const { nextUrl, auth } = req;
   const isLoggedIn = !!auth?.user;
-  const isOnAdmin = nextUrl.pathname.startsWith("/admin");
+  const isOnAdmin = nextUrl.pathname.startsWith("/seymu-gestion");
   const isLoginPage = nextUrl.pathname === "/login";
 
   // 1. If trying to access admin and NOT logged in, redirect to login
@@ -22,14 +22,14 @@ export default auth((req: NextRequest & { auth: any }) => {
 
   // 2. If logged in and trying to access login, redirect to admin
   if (isLoginPage && isLoggedIn) {
-    return NextResponse.redirect(new URL("/admin", nextUrl));
+    return NextResponse.redirect(new URL("/seymu-gestion", nextUrl));
   }
 
   return NextResponse.next();
 });
 
 export const config = {
-  matcher: ["/admin/:path*", "/login", "/api/auth/callback/credentials"],
+  matcher: ["/seymu-gestion/:path*", "/login", "/api/auth/callback/credentials"],
 };
 
 

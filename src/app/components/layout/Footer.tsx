@@ -44,12 +44,22 @@ export default async function Footer() {
           <div>
             <h4 style={{ fontWeight: 700, marginBottom: '20px', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Contacto</h4>
             <ul style={{ listStyle: 'none', color: 'var(--foreground-muted)' }}>
-              <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Phone size={16} /> {formattedPhone}
-              </li>
+              {company?.whatsapp_number && (
+                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Phone size={16} /> 
+                  <div>
+                    <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '2px' }}>Principal / WhatsApp</span>
+                    {formatWhatsApp(company.whatsapp_number)}
+                  </div>
+                </li>
+              )}
               {company?.phone && (
                 <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Phone size={16} /> {formatWhatsApp(company.phone)}
+                  <Phone size={16} /> 
+                  <div>
+                    <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '2px' }}>Secundario</span>
+                    {formatWhatsApp(company.phone)}
+                  </div>
                 </li>
               )}
               <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>

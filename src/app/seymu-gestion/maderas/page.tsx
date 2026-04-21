@@ -29,7 +29,7 @@ export default async function AdminMaderasPage(props: {
           </p>
         </div>
 
-        <Link href="/admin/maderas/nueva" className="btn-primary btn-icon-labeled">
+        <Link href="/seymu-gestion/maderas/nueva" className="btn-primary btn-icon-labeled">
           <Plus size={18} />
           Nueva madera
         </Link>
@@ -78,7 +78,7 @@ export default async function AdminMaderasPage(props: {
 
               <div className="admin-actions">
                 <Link
-                  href={`/admin/maderas/${wood.id}/editar`}
+                  href={`/seymu-gestion/maderas/${wood.id}/editar`}
                   className="btn-secondary btn-icon-labeled"
                   title="Editar detalles"
                 >
