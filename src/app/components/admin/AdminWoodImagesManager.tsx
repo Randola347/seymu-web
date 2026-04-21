@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CldUploadWidget } from "next-cloudinary";
+import ConfirmModal from "@/app/components/ui/ConfirmModal";
+import { CheckCircle2, AlertCircle, Info } from "lucide-react";
 
 type WoodImage = {
   id: number;
@@ -37,6 +39,10 @@ export default function AdminWoodImagesManager({
 
   const [message, setMessage] = useState("");
   const [busyKey, setBusyKey] = useState<string | null>(null);
+  
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
 
   async function parseJsonResponse(response: Response) {
     const rawText = await response.text();
@@ -142,12 +148,14 @@ export default function AdminWoodImagesManager({
     }
   }
 
-  async function handleDelete(imageId: number) {
-    const confirmed = window.confirm(
-      "¿Seguro que querés eliminar esta imagen del producto?"
-    );
+  function requestDelete(imageId: number) {
+    setPendingDeleteId(imageId);
+    setIsModalOpen(true);
+  }
 
-    if (!confirmed) return;
+  async function handleDelete() {
+    if (pendingDeleteId === null) return;
+    const imageId = pendingDeleteId;
 
     try {
       setBusyKey(`delete-${imageId}`);
@@ -179,6 +187,15 @@ export default function AdminWoodImagesManager({
 
   return (
     <div className="admin-images-manager">
+      <ConfirmModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleDelete}
+        title="Eliminar Imagen"
+        message="¿Seguro que querés eliminar esta imagen? Esta acción también la borrará de Cloudinary de forma permanente."
+        confirmText="Eliminar"
+        isDanger={true}
+      />
       <div className="admin-images-toolbar">
         <CldUploadWidget
           uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
@@ -257,7 +274,7 @@ export default function AdminWoodImagesManager({
                 <button
                   type="button"
                   className="btn-danger-small"
-                  onClick={() => handleDelete(image.id)}
+                  onClick={() => requestDelete(image.id)}
                   disabled={busyKey === `delete-${image.id}`}
                 >
                   {busyKey === `delete-${image.id}`
@@ -274,7 +291,16 @@ export default function AdminWoodImagesManager({
         </div>
       )}
 
-      {message ? <p className="wood-uploader-message">{message}</p> : null}
+      {message ? (
+        <div className={`admin-alert ${message.toLowerCase().includes("error") || message.toLowerCase().includes("falló") ? "error" : "success"}`}>
+          {message.toLowerCase().includes("error") || message.toLowerCase().includes("falló") ? (
+            <AlertCircle size={18} />
+          ) : (
+            <CheckCircle2 size={18} />
+          )}
+          <span>{message}</span>
+        </div>
+      ) : null}
     </div>
   );
 }

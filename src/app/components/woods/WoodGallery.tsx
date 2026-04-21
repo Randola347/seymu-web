@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ShieldCheck } from "lucide-react";
+import "./woods.css";
 
 interface WoodGalleryProps {
   images: { secure_url: string }[];
@@ -54,6 +55,7 @@ export default function WoodGallery({ images, woodName }: WoodGalleryProps) {
                 src={img.secure_url}
                 alt={`${woodName} ${i + 1}`}
                 className="wood-gallery-thumb-image"
+                style={{ pointerEvents: "none" }}
               />
             </button>
           ))}

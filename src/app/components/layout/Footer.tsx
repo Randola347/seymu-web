@@ -47,9 +47,11 @@ export default async function Footer() {
               <li style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Phone size={16} /> {formattedPhone}
               </li>
-              <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Phone size={16} /> +506 8307 5179
-              </li>
+              {company?.phone && (
+                <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Phone size={16} /> {formatWhatsApp(company.phone)}
+                </li>
+              )}
               <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Mail size={16} /> {company?.email || "ventas@seymu.com"}
               </li>

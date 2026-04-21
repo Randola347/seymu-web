@@ -10,36 +10,21 @@ const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
 const MAX_ATTEMPTS = 5;
 
 export default auth((req: NextRequest & { auth: any }) => {
-  const { nextUrl, ip } = req;
+  const { nextUrl, auth } = req;
+  const isLoggedIn = !!auth?.user;
+  const isOnAdmin = nextUrl.pathname.startsWith("/admin");
   const isLoginPage = nextUrl.pathname === "/login";
-  const isAuthCallback = nextUrl.pathname === "/api/auth/callback/credentials";
-  const userIp = ip || "anonymous";
 
-  if ((isLoginPage || isAuthCallback) && req.method === "POST") {
-    const record = loginAttempts.get(userIp);
-    const now = Date.now();
-
-    if (record) {
-      if (now - record.lastAttempt > RATE_LIMIT_WINDOW) {
-        // Reset window
-        loginAttempts.set(userIp, { count: 1, lastAttempt: now });
-      } else if (record.count >= MAX_ATTEMPTS) {
-        // Block
-        return NextResponse.json(
-          { error: "Demasiados intentos. Inténtalo más tarde." },
-          { status: 429 }
-        );
-      } else {
-        // Increment
-        record.count += 1;
-        record.lastAttempt = now;
-      }
-    } else {
-      loginAttempts.set(userIp, { count: 1, lastAttempt: now });
-    }
+  // 1. If trying to access admin and NOT logged in, redirect to login
+  if (isOnAdmin && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", nextUrl));
   }
 
-  // If unauthenticated and trying to access admin, let auth() handle redirect
+  // 2. If logged in and trying to access login, redirect to admin
+  if (isLoginPage && isLoggedIn) {
+    return NextResponse.redirect(new URL("/admin", nextUrl));
+  }
+
   return NextResponse.next();
 });
 

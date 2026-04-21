@@ -18,7 +18,6 @@ import { signOut } from "next-auth/react";
 const menuItems = [
   { name: "Dashboard", href: "/admin", icon: Home },
   { name: "Empresa", href: "/admin/empresa", icon: Settings },
-  { name: "Nosotros", href: "/admin/nosotros", icon: ScrollText },
   { name: "Maderas", href: "/admin/maderas", icon: Package },
 ];
 

@@ -1,4 +1,5 @@
 import { sql } from "./db";
+import { deleteFromCloudinary } from "./cloudinary";
 
 export type CompanySettings = {
   id: number;
@@ -93,6 +94,18 @@ function emptyToNull(value?: string | null) {
   return trimmed === "" ? null : trimmed;
 }
 
+/**
+ * Basic sanitization to prevent code injection (XSS).
+ */
+function sanitize(value: string | null | undefined): string | null {
+  if (!value) return null;
+  // Strip HTML tags and script-like patterns
+  return value
+    .replace(/<[^>]*>?/gm, "") // Remove HTML tags
+    .replace(/javascript:/gi, "") // Remove javascript: protocol
+    .trim();
+}
+
 export function slugify(value: string) {
   return value
     .normalize("NFD")
@@ -124,17 +137,17 @@ export async function saveCompanySettings(
     const rows = (await sql`
       UPDATE company_settings
       SET
-        company_name = ${input.company_name ?? existing.company_name},
-        slogan = ${input.slogan !== undefined ? emptyToNull(input.slogan) : existing.slogan},
-        about_text = ${input.about_text !== undefined ? emptyToNull(input.about_text) : existing.about_text},
-        history_text = ${input.history_text !== undefined ? emptyToNull(input.history_text) : existing.history_text},
-        mission_text = ${input.mission_text !== undefined ? emptyToNull(input.mission_text) : existing.mission_text},
-        vision_text = ${input.vision_text !== undefined ? emptyToNull(input.vision_text) : existing.vision_text},
-        whatsapp_number = ${input.whatsapp_number ?? existing.whatsapp_number},
-        phone = ${input.phone !== undefined ? emptyToNull(input.phone) : existing.phone},
-        email = ${input.email !== undefined ? emptyToNull(input.email) : existing.email},
-        address = ${input.address !== undefined ? emptyToNull(input.address) : existing.address},
-        schedule = ${input.schedule !== undefined ? emptyToNull(input.schedule) : existing.schedule},
+        company_name = ${sanitize(input.company_name) ?? existing.company_name},
+        slogan = ${input.slogan !== undefined ? sanitize(input.slogan) : existing.slogan},
+        about_text = ${input.about_text !== undefined ? sanitize(input.about_text) : existing.about_text},
+        history_text = ${input.history_text !== undefined ? sanitize(input.history_text) : existing.history_text},
+        mission_text = ${input.mission_text !== undefined ? sanitize(input.mission_text) : existing.mission_text},
+        vision_text = ${input.vision_text !== undefined ? sanitize(input.vision_text) : existing.vision_text},
+        whatsapp_number = ${sanitize(input.whatsapp_number) ?? existing.whatsapp_number},
+        phone = ${input.phone !== undefined ? sanitize(input.phone) : existing.phone},
+        email = ${input.email !== undefined ? sanitize(input.email) : existing.email},
+        address = ${input.address !== undefined ? sanitize(input.address) : existing.address},
+        schedule = ${input.schedule !== undefined ? sanitize(input.schedule) : existing.schedule},
         logo_url = ${emptyToNull(input.logo_url) ?? existing.logo_url},
         banner_url = ${emptyToNull(input.banner_url) ?? existing.banner_url},
         updated_at = NOW()
@@ -162,17 +175,17 @@ export async function saveCompanySettings(
       banner_url
     )
     VALUES (
-      ${input.company_name},
-      ${emptyToNull(input.slogan)},
-      ${emptyToNull(input.about_text)},
-      ${emptyToNull(input.history_text)},
-      ${emptyToNull(input.mission_text)},
-      ${emptyToNull(input.vision_text)},
-      ${input.whatsapp_number},
-      ${emptyToNull(input.phone)},
-      ${emptyToNull(input.email)},
-      ${emptyToNull(input.address)},
-      ${emptyToNull(input.schedule)},
+      ${sanitize(input.company_name)},
+      ${sanitize(input.slogan)},
+      ${sanitize(input.about_text)},
+      ${sanitize(input.history_text)},
+      ${sanitize(input.mission_text)},
+      ${sanitize(input.vision_text)},
+      ${sanitize(input.whatsapp_number)},
+      ${sanitize(input.phone)},
+      ${sanitize(input.email)},
+      ${sanitize(input.address)},
+      ${sanitize(input.schedule)},
       ${emptyToNull(input.logo_url)},
       ${emptyToNull(input.banner_url)}
     )
@@ -255,12 +268,12 @@ export async function saveAboutUs(input: SaveAboutUsInput): Promise<AboutUs> {
     const rows = (await sql`
       UPDATE about_us
       SET
-        history_title = ${input.history_title ?? existing.history_title},
-        history_content = ${input.history_content !== undefined ? emptyToNull(input.history_content) : existing.history_content},
-        mission_title = ${input.mission_title ?? existing.mission_title},
-        mission_content = ${input.mission_content !== undefined ? emptyToNull(input.mission_content) : existing.mission_content},
-        vision_title = ${input.vision_title ?? existing.vision_title},
-        vision_content = ${input.vision_content !== undefined ? emptyToNull(input.vision_content) : existing.vision_content},
+        history_title = ${sanitize(input.history_title) ?? existing.history_title},
+        history_content = ${input.history_content !== undefined ? sanitize(input.history_content) : existing.history_content},
+        mission_title = ${sanitize(input.mission_title) ?? existing.mission_title},
+        mission_content = ${input.mission_content !== undefined ? sanitize(input.mission_content) : existing.mission_content},
+        vision_title = ${sanitize(input.vision_title) ?? existing.vision_title},
+        vision_content = ${input.vision_content !== undefined ? sanitize(input.vision_content) : existing.vision_content},
         updated_at = NOW()
       WHERE id = ${existing.id}
       RETURNING *
@@ -275,12 +288,12 @@ export async function saveAboutUs(input: SaveAboutUsInput): Promise<AboutUs> {
       vision_title, vision_content
     )
     VALUES (
-      ${input.history_title ?? "Historia"},
-      ${emptyToNull(input.history_content)},
-      ${input.mission_title ?? "Misión"},
-      ${emptyToNull(input.mission_content)},
-      ${input.vision_title ?? "Visión"},
-      ${emptyToNull(input.vision_content)}
+      ${sanitize(input.history_title) ?? "Historia"},
+      ${sanitize(input.history_content)},
+      ${sanitize(input.mission_title) ?? "Misión"},
+      ${sanitize(input.mission_content)},
+      ${sanitize(input.vision_title) ?? "Visión"},
+      ${sanitize(input.vision_content)}
     )
     RETURNING *
   `) as AboutUs[];
@@ -334,6 +347,17 @@ export async function getWoodBySlug(slug: string): Promise<Wood | null> {
   return rows[0] ?? null;
 }
 
+export async function getWoodByName(name: string): Promise<Wood | null> {
+  const rows = (await sql`
+    SELECT *
+    FROM woods
+    WHERE LOWER(name) = LOWER(${name.trim()})
+    LIMIT 1
+  `) as Wood[];
+
+  return rows[0] ?? null;
+}
+
 export async function getWoodById(id: number): Promise<Wood | null> {
   const rows = (await sql`
     SELECT *
@@ -363,13 +387,13 @@ export async function createWood(input: SaveWoodInput): Promise<Wood> {
       updated_at
     )
     VALUES (
-      ${input.name},
+      ${sanitize(input.name)},
       ${finalSlug},
-      ${emptyToNull(input.short_description)},
-      ${emptyToNull(input.description)},
+      ${sanitize(input.short_description)},
+      ${sanitize(input.description)},
       ${input.price},
-      ${emptyToNull(input.category)},
-      ${emptyToNull(input.measurements)},
+      ${sanitize(input.category)},
+      ${sanitize(input.measurements)},
       ${input.is_active ?? true},
       ${input.is_featured ?? false},
       NOW(),
@@ -390,13 +414,13 @@ export async function updateWood(
   const rows = (await sql`
     UPDATE woods
     SET
-      name = ${input.name},
+      name = ${sanitize(input.name)},
       slug = ${finalSlug},
-      short_description = ${emptyToNull(input.short_description)},
-      description = ${emptyToNull(input.description)},
+      short_description = ${sanitize(input.short_description)},
+      description = ${sanitize(input.description)},
       price = ${input.price},
-      category = ${emptyToNull(input.category)},
-      measurements = ${emptyToNull(input.measurements)},
+      category = ${sanitize(input.category)},
+      measurements = ${sanitize(input.measurements)},
       is_active = ${input.is_active ?? true},
       is_featured = ${input.is_featured ?? false},
       updated_at = NOW()
@@ -434,6 +458,22 @@ export async function updateWoodFeaturedStatus(
 }
 
 export async function deleteWood(id: number): Promise<void> {
+  // 1. Get all images for this wood
+  const images = await getWoodImages(id);
+  
+  // 2. Delete each image from Cloudinary
+  for (const img of images) {
+    if (img.public_id) {
+      await deleteFromCloudinary(img.public_id);
+    }
+  }
+
+  // 3. Delete from DB
+  await sql`
+    DELETE FROM wood_images
+    WHERE wood_id = ${id}
+  `;
+
   await sql`
     DELETE FROM woods
     WHERE id = ${id}
@@ -449,4 +489,27 @@ export async function getWoodImages(woodId: number): Promise<WoodImage[]> {
   `) as WoodImage[];
 
   return rows;
+}
+
+export async function saveWoodImages(woodId: number, images: { public_id: string, secure_url: string }[]) {
+  for (const img of images) {
+    await sql`
+      INSERT INTO wood_images (wood_id, public_id, secure_url, sort_order)
+      VALUES (${woodId}, ${img.public_id}, ${img.secure_url}, 10)
+    `;
+  }
+}
+
+export async function deleteWoodImage(imageId: number) {
+  const row = (await sql`
+    SELECT public_id FROM wood_images WHERE id = ${imageId}
+  `) as { public_id: string | null }[];
+
+  if (row[0]?.public_id) {
+    await deleteFromCloudinary(row[0].public_id);
+  }
+
+  await sql`
+    DELETE FROM wood_images WHERE id = ${imageId}
+  `;
 }
