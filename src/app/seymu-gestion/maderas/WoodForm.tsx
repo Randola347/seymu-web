@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import { createWoodAction, updateWoodAction } from "./actions";
+import { createWoodAction, updateWoodAction, type ActionState } from "./actions";
 import WoodImageUploader from "./WoodImageUploader";
 import type { Wood } from "@/lib/seymu-data";
 import { Save, Star, MonitorCheck, Info } from "lucide-react";
@@ -16,21 +16,21 @@ interface WoodFormProps {
 export default function WoodForm({ wood, mode }: WoodFormProps) {
   const actionWithId = mode === "edit" ? updateWoodAction.bind(null, wood!.id) : createWoodAction;
 
-  const [state, formAction, isPending] = useActionState(actionWithId, {
+  const [state, formAction, isPending] = useActionState<ActionState, FormData>(actionWithId, {
     success: false,
     message: "",
   });
 
   // Price formatting logic
-  const formatNumber = (val: string) => {
-    if (!val) return "";
+  const formatNumber = (val: string | number | undefined | null) => {
+    if (val === undefined || val === null || val === "") return "";
     const clean = val.toString().replace(/\D/g, "");
     return new Intl.NumberFormat("en-US").format(parseInt(clean || "0"));
   };
 
   // State for display price, initialized with wood data or previous failed state
   const [displayPrice, setDisplayPrice] = useState(
-    formatNumber(state.fields?.price?.toString() ?? wood?.price?.toString() ?? "")
+    formatNumber(state.fields?.price ?? wood?.price ?? "")
   );
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +52,7 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
     }
     // Update local price state if server returns new fields (persistence)
     if (state.fields?.price) {
-      setDisplayPrice(formatNumber(state.fields.price.toString()));
+      setDisplayPrice(formatNumber(state.fields.price));
     }
   }, [state]);
 
@@ -91,12 +91,6 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
                 value={displayPrice.replace(/\D/g, "")} 
               />
               {state.errors?.price && <span className="error-text">{state.errors.price}</span>}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '6px', color: 'var(--foreground-muted)', fontSize: '0.8rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <Info size={14} />
-                  <span>Se formatea automáticamente mientras escribís.</span>
-                </div>
-              </div>
             </div>
 
             <div className="form-field">
@@ -132,7 +126,7 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
                 type="checkbox"
                 name="is_featured"
                 id="is_featured"
-                defaultChecked={state.fields?.is_featured === "true" || state.fields?.is_featured === true || wood?.is_featured === true}
+                defaultChecked={state.fields?.is_featured === true || (state.fields === undefined && wood?.is_featured === true)}
                 disabled={isPending}
               />
               <label htmlFor="is_featured">
@@ -146,7 +140,7 @@ export default function WoodForm({ wood, mode }: WoodFormProps) {
                 type="checkbox"
                 name="is_active"
                 id="is_active"
-                defaultChecked={state.fields?.is_active === "false" || state.fields?.is_active === false ? false : (wood ? wood.is_active : true)}
+                defaultChecked={state.fields?.is_active === false ? false : (state.fields === undefined ? (wood ? wood.is_active : true) : state.fields.is_active === true)}
                 disabled={isPending}
               />
               <label htmlFor="is_active">

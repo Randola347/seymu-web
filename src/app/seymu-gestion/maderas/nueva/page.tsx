@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react";
 export default function NuevaMaderaPage() {
   return (
     <div className="admin-form-container">
-      <Link href="/admin/maderas" className="admin-back-btn">
+      <Link href="/seymu-gestion/maderas" className="admin-back-btn">
         <ChevronLeft size={18} />
         Volver al inventario
       </Link>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, ChevronLeft, ChevronRight } from "lucide-react";
 import "./woods.css";
 
 interface WoodGalleryProps {
@@ -15,9 +15,17 @@ export default function WoodGallery({ images, woodName }: WoodGalleryProps) {
     [images]
   );
 
-  const [activeImage, setActiveImage] = useState<string | null>(
-    validImages[0]?.secure_url || null
-  );
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const activeImage = validImages[currentIndex]?.secure_url || null;
+
+  const nextImage = () => {
+    setCurrentIndex((prev) => (prev + 1) % validImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prev) => (prev - 1 + validImages.length) % validImages.length);
+  };
 
   if (!activeImage) {
     return (
@@ -38,6 +46,27 @@ export default function WoodGallery({ images, woodName }: WoodGalleryProps) {
           alt={woodName}
           className="wood-gallery-main-image"
         />
+
+        {validImages.length > 1 && (
+          <>
+            <button
+              type="button"
+              className="gallery-arrow prev"
+              onClick={prevImage}
+              aria-label="Imagen anterior"
+            >
+              <ChevronLeft size={28} style={{ pointerEvents: 'none' }} />
+            </button>
+            <button
+              type="button"
+              className="gallery-arrow next"
+              onClick={nextImage}
+              aria-label="Siguiente imagen"
+            >
+              <ChevronRight size={28} style={{ pointerEvents: 'none' }} />
+            </button>
+          </>
+        )}
       </div>
 
       {validImages.length > 1 && (
@@ -46,8 +75,8 @@ export default function WoodGallery({ images, woodName }: WoodGalleryProps) {
             <button
               key={i}
               type="button"
-              onClick={() => setActiveImage(img.secure_url)}
-              className={`wood-gallery-thumb ${activeImage === img.secure_url ? "active" : ""
+              onClick={() => setCurrentIndex(i)}
+              className={`wood-gallery-thumb ${currentIndex === i ? "active" : ""
                 }`}
               aria-label={`Ver imagen ${i + 1} de ${woodName}`}
             >

@@ -6,7 +6,14 @@ import { woodSchema } from "@/lib/schemas";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 
-export async function createWoodAction(prevState: any, formData: FormData) {
+export type ActionState = {
+  success: boolean;
+  message: string;
+  errors?: Record<string, string[]>;
+  fields?: Record<string, any>;
+};
+
+export async function createWoodAction(prevState: any, formData: FormData): Promise<ActionState> {
   const session = await auth();
   if (!session) {
     return { success: false, message: "No autorizado." };
@@ -52,12 +59,12 @@ export async function createWoodAction(prevState: any, formData: FormData) {
       await saveWoodImages(wood.id, images);
     }
     
-    revalidatePath("/admin/maderas");
+    revalidatePath("/seymu-gestion/maderas");
     revalidatePath("/maderas");
     revalidatePath("/");
 
     // Redirect to the inventory with the new ID for highlighting
-    redirect(`/admin/maderas?newId=${wood.id}`);
+    redirect(`/seymu-gestion/maderas?newId=${wood.id}`);
   } catch (error) {
     if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
       throw error;
@@ -70,7 +77,7 @@ export async function createWoodAction(prevState: any, formData: FormData) {
   }
 }
 
-export async function updateWoodAction(id: number, prevState: any, formData: FormData) {
+export async function updateWoodAction(id: number, prevState: any, formData: FormData): Promise<ActionState> {
   const session = await auth();
   if (!session) {
     return { success: false, message: "No autorizado." };
@@ -109,7 +116,7 @@ export async function updateWoodAction(id: number, prevState: any, formData: For
   try {
     await updateWood(id, validatedFields.data);
     
-    revalidatePath("/admin/maderas");
+    revalidatePath("/seymu-gestion/maderas");
     revalidatePath(`/maderas/${validatedFields.data.slug}`);
     revalidatePath("/");
 
@@ -132,7 +139,7 @@ export async function toggleWoodStatusAction(id: number, isActive: boolean) {
   try {
     const { updateWoodStatus } = await import("@/lib/seymu-data");
     await updateWoodStatus(id, isActive);
-    revalidatePath("/admin/maderas");
+    revalidatePath("/seymu-gestion/maderas");
     revalidatePath("/maderas");
     revalidatePath("/");
     return { success: true };
@@ -148,7 +155,7 @@ export async function toggleWoodFeaturedAction(id: number, isFeatured: boolean) 
   try {
     const { updateWoodFeaturedStatus } = await import("@/lib/seymu-data");
     await updateWoodFeaturedStatus(id, isFeatured);
-    revalidatePath("/admin/maderas");
+    revalidatePath("/seymu-gestion/maderas");
     revalidatePath("/");
     return { success: true };
   } catch (error) {
@@ -164,7 +171,7 @@ export async function deleteWoodAction(id: number) {
     const { deleteWood } = await import("@/lib/seymu-data");
     await deleteWood(id);
     
-    revalidatePath("/admin/maderas");
+    revalidatePath("/seymu-gestion/maderas");
     revalidatePath("/maderas");
     revalidatePath("/");
     

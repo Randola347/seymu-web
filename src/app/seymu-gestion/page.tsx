@@ -55,7 +55,7 @@ export default async function AdminPage() {
           <p>
             Actualizá el nombre, contacto de WhatsApp, slogan e identidad visual (logo y banners).
           </p>
-          <Link href="/admin/empresa" className="btn-primary btn-icon-labeled" style={{ justifyContent: 'center' }}>
+          <Link href="/seymu-gestion/empresa" className="btn-primary btn-icon-labeled" style={{ justifyContent: 'center' }}>
             Gestionar Perfil
             <ArrowRight size={16} />
           </Link>
@@ -69,7 +69,7 @@ export default async function AdminPage() {
           <p>
             Agregá nuevas especies, cambiá precios, marcá favoritos y gestioná la galería de fotos.
           </p>
-          <Link href="/admin/maderas" className="btn-primary btn-icon-labeled" style={{ justifyContent: 'center' }}>
+          <Link href="/seymu-gestion/maderas" className="btn-primary btn-icon-labeled" style={{ justifyContent: 'center' }}>
             Ir al Inventario
             <ArrowRight size={16} />
           </Link>

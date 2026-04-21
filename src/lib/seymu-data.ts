@@ -6,9 +6,6 @@ export type CompanySettings = {
   company_name: string;
   slogan: string | null;
   about_text: string | null;
-  history_text: string | null;
-  mission_text: string | null;
-  vision_text: string | null;
   whatsapp_number: string;
   phone: string | null;
   email: string | null;
@@ -67,9 +64,6 @@ type SaveCompanyInput = {
   company_name: string;
   slogan?: string | null;
   about_text?: string | null;
-  history_text?: string | null;
-  mission_text?: string | null;
-  vision_text?: string | null;
   whatsapp_number: string;
   phone?: string | null;
   email?: string | null;
@@ -140,9 +134,6 @@ export async function saveCompanySettings(
         company_name = ${sanitize(input.company_name) ?? existing.company_name},
         slogan = ${input.slogan !== undefined ? sanitize(input.slogan) : existing.slogan},
         about_text = ${input.about_text !== undefined ? sanitize(input.about_text) : existing.about_text},
-        history_text = ${input.history_text !== undefined ? sanitize(input.history_text) : existing.history_text},
-        mission_text = ${input.mission_text !== undefined ? sanitize(input.mission_text) : existing.mission_text},
-        vision_text = ${input.vision_text !== undefined ? sanitize(input.vision_text) : existing.vision_text},
         whatsapp_number = ${sanitize(input.whatsapp_number) ?? existing.whatsapp_number},
         phone = ${input.phone !== undefined ? sanitize(input.phone) : existing.phone},
         email = ${input.email !== undefined ? sanitize(input.email) : existing.email},
@@ -163,9 +154,6 @@ export async function saveCompanySettings(
       company_name,
       slogan,
       about_text,
-      history_text,
-      mission_text,
-      vision_text,
       whatsapp_number,
       phone,
       email,
@@ -178,9 +166,6 @@ export async function saveCompanySettings(
       ${sanitize(input.company_name)},
       ${sanitize(input.slogan)},
       ${sanitize(input.about_text)},
-      ${sanitize(input.history_text)},
-      ${sanitize(input.mission_text)},
-      ${sanitize(input.vision_text)},
       ${sanitize(input.whatsapp_number)},
       ${sanitize(input.phone)},
       ${sanitize(input.email)},

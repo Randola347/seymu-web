@@ -1,16 +1,16 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { saveCompanySettingsAction } from "./actions";
 import type { CompanySettings, SiteIdentity } from "@/lib/seymu-data";
 import EmpresaImageUploader from "./EmpresaImageUploader";
-import { Save, Building2, Globe } from "lucide-react";
+import { Save, Building2, Globe, AlertCircle } from "lucide-react";
 
-export default function EmpresaForm({ 
-  company, 
-  identity 
-}: { 
+export default function EmpresaForm({
+  company,
+  identity
+}: {
   company: CompanySettings | null,
   identity: SiteIdentity | null
 }) {
@@ -18,6 +18,9 @@ export default function EmpresaForm({
     success: false,
     message: "",
   });
+
+  const [logoUrl, setLogoUrl] = useState(identity?.logo_url || "");
+  const [bannerUrl, setBannerUrl] = useState(identity?.banner_url || "");
 
   useEffect(() => {
     if (state.message) {
@@ -28,6 +31,8 @@ export default function EmpresaForm({
       }
     }
   }, [state]);
+
+  const isFormIncomplete = !logoUrl || !bannerUrl;
 
   return (
     <div className="admin-form-container">
@@ -59,7 +64,7 @@ export default function EmpresaForm({
           </div>
 
           <div className="form-field">
-            <label htmlFor="whatsapp_number">WhatsApp / Contacto Principal</label>
+            <label htmlFor="whatsapp_number">Contacto Principal</label>
             <input
               id="whatsapp_number"
               name="whatsapp_number"
@@ -70,10 +75,14 @@ export default function EmpresaForm({
               title="Solo números y símbolo +"
               disabled={isPending}
             />
+            <p className="field-hint" style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: '4px' }}>
+              Este número se usará también para el botón flotante de WhatsApp.
+            </p>
+            {state.errors?.whatsapp_number && <span className="error-text">{state.errors.whatsapp_number}</span>}
           </div>
 
           <div className="form-field">
-            <label htmlFor="phone">Teléfono Secundario / Oficina</label>
+            <label htmlFor="phone">Contacto Secundario</label>
             <input
               id="phone"
               name="phone"
@@ -141,10 +150,11 @@ export default function EmpresaForm({
           </h3>
 
           <div style={{ display: 'grid', gap: '10px' }}>
-            <EmpresaImageUploader 
-              label="Logotipo" 
-              name="logo_url" 
-              currentUrl={identity?.logo_url} 
+            <EmpresaImageUploader
+              label="Logotipo"
+              name="logo_url"
+              currentUrl={identity?.logo_url}
+              onChange={setLogoUrl}
             />
             <p className="field-hint" style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: '-8px' }}>
               Sugerido: 512x512px (PNG sin fondo)
@@ -152,10 +162,11 @@ export default function EmpresaForm({
           </div>
 
           <div style={{ display: 'grid', gap: '10px' }}>
-            <EmpresaImageUploader 
-              label="Banner Home" 
-              name="banner_url" 
-              currentUrl={identity?.banner_url} 
+            <EmpresaImageUploader
+              label="Banner Home"
+              name="banner_url"
+              currentUrl={identity?.banner_url}
+              onChange={setBannerUrl}
             />
             <p className="field-hint" style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: '-8px' }}>
               Sugerido: 1920x800px (JPG alta calidad)
@@ -163,8 +174,30 @@ export default function EmpresaForm({
           </div>
         </div>
 
+        {isFormIncomplete && (
+          <div style={{ 
+            marginTop: '20px', 
+            padding: '12px', 
+            background: 'rgba(239, 68, 68, 0.1)', 
+            borderRadius: '8px',
+            color: '#ef4444',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            fontSize: '0.85rem'
+          }}>
+            <AlertCircle size={18} />
+            <span>El Logotipo y el Banner son obligatorios para guardar la configuración.</span>
+          </div>
+        )}
+
         <div className="form-actions">
-          <button type="submit" className="btn-primary btn-icon-labeled" disabled={isPending}>
+          <button 
+            type="submit" 
+            className="btn-primary btn-icon-labeled" 
+            disabled={isPending || isFormIncomplete}
+            style={{ opacity: isFormIncomplete ? 0.6 : 1 }}
+          >
             <Save size={18} />
             {isPending ? "Guardando..." : "Actualizar Configuración"}
           </button>

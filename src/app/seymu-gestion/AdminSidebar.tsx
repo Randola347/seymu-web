@@ -16,9 +16,9 @@ import {
 import { signOut } from "next-auth/react";
 
 const menuItems = [
-  { name: "Dashboard", href: "/admin", icon: Home },
-  { name: "Empresa", href: "/admin/empresa", icon: Settings },
-  { name: "Maderas", href: "/admin/maderas", icon: Package },
+  { name: "Dashboard", href: "/seymu-gestion", icon: Home },
+  { name: "Empresa", href: "/seymu-gestion/empresa", icon: Settings },
+  { name: "Maderas", href: "/seymu-gestion/maderas", icon: Package },
 ];
 
 export default function AdminSidebar() {

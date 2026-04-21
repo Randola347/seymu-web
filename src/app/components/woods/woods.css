@@ -158,6 +158,7 @@
   overflow: hidden;
   background: var(--surface-alt);
   border: 1px solid var(--border-light);
+  position: relative; /* Added for arrows */
 }
 
 .wood-gallery-main-image {
@@ -165,6 +166,46 @@
   height: 100%;
   object-fit: contain;
   transition: opacity 0.3s ease;
+}
+
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.gallery-arrow:active {
+  transform: translateY(-50%) scale(0.92);
+  background: var(--white);
+}
+
+.gallery-arrow:hover {
+  background: #fff;
+  color: var(--primary-dark);
+}
+
+.gallery-arrow.prev {
+  left: 12px;
+}
+
+.gallery-arrow.next {
+  right: 12px;
 }
 
 .wood-gallery-thumbs {
@@ -229,41 +270,137 @@
 }
 
 /* ─────────────────────────────────────────────
+   Wood Card Badges & Enhancements
+   ───────────────────────────────────────────── */
+.wood-card-category-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  color: var(--primary);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 5;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.woods-results-count {
+  font-size: 0.9rem;
+  color: var(--foreground-muted);
+}
+
+.woods-results-count span {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.woods-scroll-hint {
+  font-size: 0.65rem;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  animation: pulseHint 2s infinite;
+}
+
+@keyframes pulseHint {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────
    Mobile Responsiveness (Catalog & Gallery)
    ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .woods-grid-custom {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px;
+  }
+}
+
 @media (max-width: 768px) {
-  .woods-mobile-filters-btn {
-    display: inline-flex;
+  .mobile-only {
+    display: block;
+  }
+
+  .woods-catalog-shell {
+    gap: 24px;
+  }
+
+  .woods-toolbar {
+    padding: 16px;
+    border-radius: var(--radius-sm);
   }
 
   .woods-toolbar-top {
     flex-direction: column;
-    margin-bottom: 16px;
-  }
-
-  .woods-filters {
-    display: none;
-  }
-
-  .woods-filters.show {
-    display: grid;
-  }
-
-  .woods-toolbar-meta {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-
-@media (max-width: 540px) {
-  .wood-gallery-thumbs {
-    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 12px;
     gap: 8px;
   }
 
-  .woods-toolbar,
-  .wood-card-body {
-    padding-left: 18px;
-    padding-right: 18px;
+  .woods-filters {
+    gap: 12px;
+  }
+
+  .woods-filter-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .woods-chip-list-scroll {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    padding-bottom: 8px;
+    margin: 0 -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 8px;
+  }
+
+  .woods-chip {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .wood-card-btn {
+    width: 100%;
+    padding: 14px 20px;
+  }
+
+  .wood-card-media {
+    height: 200px;
+  }
+
+  .gallery-arrow {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+}
+
+@media (max-width: 480px) {
+  .woods-grid-custom {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  .woods-title {
+    font-size: 1.5rem;
   }
 }
