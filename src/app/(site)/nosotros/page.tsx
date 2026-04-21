@@ -1,55 +1,45 @@
-import { getAboutUs } from "@/lib/seymu-data";
 import "./nosotros.css";
 
 export const dynamic = "force-dynamic";
 
 export default async function NosotrosPage() {
-  const aboutUs = await getAboutUs();
+  const values = ["Calidad", "Confianza", "Sostenibilidad", "Atención cercana"];
 
   const historyPoints = [
     {
       year: "2008",
       title: "Fundación",
-      description:
-        "Iniciamos operaciones con el propósito de ofrecer maderas de alta calidad, atención cercana y soluciones confiables para proyectos residenciales y comerciales.",
+      description: "Nacimiento de la empresa en La Guácima por el Ing. Ezequiel Segura López.",
     },
     {
       year: "2010",
-      title: "Consolidación",
-      description:
-        "Fortalecimos relaciones con talleres, ebanistas y clientes del sector construcción, consolidando una reputación basada en servicio y confianza.",
+      title: "Crecimiento",
+      description: "Traslado a la ubicación actual y expansión del inventario de especies.",
     },
     {
       year: "2012",
-      title: "Sostenibilidad",
-      description:
-        "Reforzamos criterios de selección responsable para trabajar con materiales provenientes de fuentes legales y manejo forestal consciente.",
+      title: "Innovación",
+      description: "Incorporación del secado al horno para garantizar máxima estabilidad.",
     },
     {
       year: "2017",
-      title: "Digitalización",
-      description:
-        "Incorporamos canales digitales y una operación más ágil para mejorar la atención, la exhibición del catálogo y la coordinación logística.",
+      title: "Expansión",
+      description: "Proveedor clave de proyectos de lujo en Guanacaste y aserrío personalizado.",
     },
     {
-      year: "Actualidad",
-      title: "Proyección",
-      description:
-        "Seguimos evolucionando con una visión enfocada en calidad, continuidad operativa y una experiencia de compra más moderna para nuestros clientes.",
+      year: "Hoy",
+      title: "Liderazgo",
+      description: "Inventario de 50,000 pulgadas y referente en maderas finas a nivel nacional.",
     },
   ];
 
-  const values = ["Calidad", "Confianza", "Sostenibilidad", "Atención cercana"];
+  const historyText = `<b>Maderas Finas Seymu</b> nació en <b>2008</b> en La Guácima, Alajuela, como un proyecto personal del <b>Ing. Ezequiel Segura López</b>, profesional del TEC con más de <b>35 años de experiencia</b>. Lo que inició en una pequeña bodega contigua a la casa de su fundador para abastecer a ebanistas locales con <b>cedro de alta calidad</b>, pronto se transformó en una operación sólida impulsada por la confianza de proveedores que financiaron nuestros primeros cargamentos de <b>1,000 pulgadas</b>.
 
-  const historyText =
-    aboutUs?.history_content ||
-    `Desde nuestros inicios, en Maderas Seymu nos hemos enfocado en ofrecer materiales de alta calidad y una atención cercana a cada cliente.
+    Para <b>2010</b>, el crecimiento constante nos trasladó a nuestra <b>ubicación actual</b>, ampliando el inventario y la oferta de especies. En <b>2012</b>, marcamos un hito tecnológico al integrar el <b>secado al horno</b>, un servicio que garantiza la máxima <b>estabilidad y durabilidad</b> del material, brindando a nuestros clientes una satisfacción y fidelidad que nos distingue en el mercado.
 
-Nuestra experiencia se ha construido con trabajo constante, conocimiento del producto y una relación de confianza con quienes desarrollan, diseñan o construyen.
+    Un momento de gran expansión ocurrió en <b>2017</b>, al convertirnos en proveedores clave de <b>proyectos hoteleros y residencias de lujo en Guanacaste</b>. Este salto nos permitió evolucionar nuestro modelo de negocio, pasando de comprar madera aserrada a gestionar directamente el <b>aserrío personalizado de trozas</b>, asegurando un control total sobre la calidad y las medidas específicas solicitadas por el cliente.
 
-Cada etapa de nuestro crecimiento ha estado marcada por el compromiso con la calidad, la responsabilidad en la selección de materiales y la búsqueda de una experiencia de compra más profesional.
-
-Hoy seguimos proyectándonos como una empresa sólida, moderna y confiable dentro del sector maderero en Costa Rica.`;
+    Hoy en día, contamos con un inventario propio de <b>50,000 pulgadas</b> y una amplia gama de especies exclusivas como <b>cedro, guanacaste, laurel, cenízaro, teca y roble sabana</b>. Nuestra oferta incluye desde <b>tablones exclusivos para sobres de mesa</b> hasta madera estructural, rodapiés y tablillas para cielo, consolidándonos como un referente de excelencia y servicio experto en toda Costa Rica.`;
 
   const historyParagraphs = historyText
     .split(/\n\s*\n/)
@@ -113,28 +103,33 @@ Hoy seguimos proyectándonos como una empresa sólida, moderna y confiable dentr
 
               <div className="nosotros-id-story-flow">
                 {historyParagraphs.map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
+                  <p 
+                    key={index} 
+                    dangerouslySetInnerHTML={{ __html: paragraph }}
+                  />
                 ))}
               </div>
             </article>
 
             <div className="nosotros-id-side">
-              <article className="nosotros-id-card">
-                <span className="nosotros-card-eyebrow">Misión</span>
-                <h3>Calidad que transforma</h3>
-                <p>
-                  {aboutUs?.mission_content ||
-                    "Brindar soluciones madereras de alta calidad, acompañando a nuestros clientes con productos confiables, atención responsable y compromiso con la excelencia."}
-                </p>
-              </article>
-
-              <article className="nosotros-id-card">
-                <span className="nosotros-card-eyebrow">Visión</span>
-                <h3>Referente de confianza</h3>
-                <p>
-                  {aboutUs?.vision_content ||
-                    "Ser una empresa reconocida por la calidad de sus maderas, la solidez de su servicio y una operación alineada con prácticas responsables y sostenibles."}
-                </p>
+              <article className="nosotros-id-card-combined">
+                <div className="nosotros-combined-section">
+                  <span className="nosotros-card-eyebrow">Misión</span>
+                  <h3>Calidad que transforma</h3>
+                  <p>
+                    Proveer maderas finas para la fabricación de muebles y construcción de la más alta calidad que superen las expectativas de los clientes, ofreciendo un servicio experto y personalizado fomentando las mejores prácticas.
+                  </p>
+                </div>
+                
+                <div className="nosotros-combined-divider"></div>
+                
+                <div className="nosotros-combined-section">
+                  <span className="nosotros-card-eyebrow">Visión</span>
+                  <h3>Referente de confianza</h3>
+                  <p>
+                    Ser los líderes en la comercialización de maderas finas, transformando la forma en que los clientes perciben y valoran nuestro producto reflejando nuestro compromiso con la calidad.
+                  </p>
+                </div>
               </article>
             </div>
           </div>

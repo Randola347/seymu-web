@@ -59,57 +59,65 @@ export default function EmpresaForm({
           </div>
 
           <div className="form-field">
-            <label htmlFor="whatsapp_number">WhatsApp</label>
+            <label htmlFor="whatsapp_number">WhatsApp / Contacto Principal</label>
             <input
               id="whatsapp_number"
               name="whatsapp_number"
               type="text"
               defaultValue={company?.whatsapp_number ?? ""}
               required
+              pattern="[0-9+ ]*"
+              title="Solo números y símbolo +"
               disabled={isPending}
             />
           </div>
 
           <div className="form-field">
-            <label htmlFor="phone">Teléfono</label>
+            <label htmlFor="phone">Teléfono Secundario / Oficina</label>
             <input
               id="phone"
               name="phone"
               type="text"
-              defaultValue={company?.phone ?? ""}
+              defaultValue={company?.phone ?? "+506 8307 5179"}
+              pattern="[0-9+ ]*"
+              title="Solo números y símbolo +"
               disabled={isPending}
+              placeholder="+506 0000 0000"
             />
           </div>
 
           <div className="form-field">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">Email Corporativo</label>
             <input
               id="email"
               name="email"
               type="email"
               defaultValue={company?.email ?? ""}
+              required
               disabled={isPending}
             />
           </div>
 
           <div className="form-field">
-            <label htmlFor="schedule">Horario</label>
+            <label htmlFor="schedule">Horario de Atención</label>
             <input
               id="schedule"
               name="schedule"
               type="text"
               defaultValue={company?.schedule ?? ""}
+              required
               disabled={isPending}
             />
           </div>
 
           <div className="form-field">
-            <label htmlFor="address">Dirección</label>
+            <label htmlFor="address">Dirección Física</label>
             <input
               id="address"
               name="address"
               type="text"
               defaultValue={company?.address ?? ""}
+              required
               disabled={isPending}
             />
           </div>
@@ -132,17 +140,27 @@ export default function EmpresaForm({
             Identidad Visual
           </h3>
 
-          <EmpresaImageUploader 
-            label="Logotipo" 
-            name="logo_url" 
-            currentUrl={identity?.logo_url} 
-          />
+          <div style={{ display: 'grid', gap: '10px' }}>
+            <EmpresaImageUploader 
+              label="Logotipo" 
+              name="logo_url" 
+              currentUrl={identity?.logo_url} 
+            />
+            <p className="field-hint" style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: '-8px' }}>
+              Sugerido: 512x512px (PNG sin fondo)
+            </p>
+          </div>
 
-          <EmpresaImageUploader 
-            label="Banner Home" 
-            name="banner_url" 
-            currentUrl={identity?.banner_url} 
-          />
+          <div style={{ display: 'grid', gap: '10px' }}>
+            <EmpresaImageUploader 
+              label="Banner Home" 
+              name="banner_url" 
+              currentUrl={identity?.banner_url} 
+            />
+            <p className="field-hint" style={{ fontSize: '0.75rem', color: 'var(--foreground-muted)', marginTop: '-8px' }}>
+              Sugerido: 1920x800px (JPG alta calidad)
+            </p>
+          </div>
         </div>
 
         <div className="form-actions">

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
+import { deleteFromCloudinary } from "@/lib/cloudinary";
 
 export const runtime = "nodejs";
 
@@ -32,6 +33,15 @@ export async function PATCH(request: Request, context: RouteContext) {
         { success: false, message: "secureUrl es obligatorio." },
         { status: 400 }
       );
+    }
+
+    // Get old public_id to delete from Cloudinary if changed
+    const oldRow = (await sql`
+      SELECT public_id FROM wood_images WHERE id = ${imageId}
+    `) as { public_id: string | null }[];
+
+    if (oldRow[0]?.public_id && oldRow[0].public_id !== publicId) {
+      await deleteFromCloudinary(oldRow[0].public_id);
     }
 
     const updatedRows = (await sql`
@@ -81,6 +91,14 @@ export async function DELETE(_request: Request, context: RouteContext) {
         { success: false, message: "ID de imagen inválido." },
         { status: 400 }
       );
+    }
+
+    const row = (await sql`
+      SELECT public_id FROM wood_images WHERE id = ${imageId}
+    `) as { public_id: string | null }[];
+
+    if (row[0]?.public_id) {
+      await deleteFromCloudinary(row[0].public_id);
     }
 
     await sql`

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { SlidersHorizontal, ArrowRight, X } from "lucide-react";
 import Link from "next/link";
+import "./woods.css";
 
 interface Wood {
   id: number;
@@ -62,7 +63,7 @@ export default function WoodCatalog({ woods }: WoodCatalogProps) {
             onClick={() => setMobileFiltersOpen((prev) => !prev)}
             aria-expanded={mobileFiltersOpen}
           >
-            {mobileFiltersOpen ? <X size={18} /> : <SlidersHorizontal size={18} />}
+            {mobileFiltersOpen ? <X size={18} style={{ pointerEvents: "none" }} /> : <SlidersHorizontal size={18} style={{ pointerEvents: "none" }} />}
             {mobileFiltersOpen ? "Cerrar filtros" : "Abrir filtros"}
           </button>
         </div>

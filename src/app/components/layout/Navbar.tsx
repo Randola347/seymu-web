@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import "./navbar.css";
 
 interface NavbarProps {
   companyName: string;
@@ -92,7 +93,7 @@ export default function Navbar({ companyName, logoUrl }: NavbarProps) {
             aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={isOpen}
           >
-            {isOpen ? <X size={26} /> : <Menu size={26} />}
+            {isOpen ? <X size={26} style={{ pointerEvents: "none" }} /> : <Menu size={26} style={{ pointerEvents: "none" }} />}
           </button>
         </div>
       </header>

@@ -178,6 +178,11 @@ export default async function HomePage() {
 
           {featuredWoods.length > 0 && (
             <div className="home-featured-list">
+              <div className="home-section-heading centered" style={{ marginBottom: '40px' }}>
+                <span className="hero-tag">Selección Especial</span>
+                <h2 style={{ fontSize: '2.5rem' }}>Maderas Destacadas</h2>
+                <div className="home-section-line" />
+              </div>
               <div className="wood-grid">
                 {featuredWoods.map((wood) => (
                   <article key={wood.id} className="premium-card home-wood-card">

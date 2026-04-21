@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CldUploadWidget } from "next-cloudinary";
+import { CheckCircle2, AlertCircle, Info } from "lucide-react";
 
 type WoodImageUploaderProps = {
   woodId: number;
@@ -84,7 +85,6 @@ export default function WoodImageUploader({
 
   return (
     <div className="wood-uploader-card">
-      <p className="wood-uploader-title">{woodName}</p>
 
       <CldUploadWidget
         uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}
@@ -116,7 +116,16 @@ export default function WoodImageUploader({
         }}
       </CldUploadWidget>
 
-      {message ? <p className="wood-uploader-message">{message}</p> : null}
+      {message ? (
+        <div className={`admin-alert ${message.toLowerCase().includes("error") || message.toLowerCase().includes("falló") ? "error" : "info"}`}>
+          {message.toLowerCase().includes("error") || message.toLowerCase().includes("falló") ? (
+            <AlertCircle size={18} />
+          ) : (
+             message.includes("correctamente") ? <CheckCircle2 size={18} /> : <Info size={18} />
+          )}
+          <span>{message}</span>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -40,7 +40,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 60, // 30 minutes of inactivity
+    updateAge: 0,    // Update token on every request to reset inactivity timer
   },
   cookies: {
     sessionToken: {
@@ -50,6 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
+        // Omit maxAge entirely to make it a session cookie (expires when browser/window closes)
       },
     },
   },

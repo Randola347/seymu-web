@@ -4,15 +4,23 @@ import WoodStatusToggle from "./WoodStatusToggle";
 import WoodFeaturedToggle from "./WoodFeaturedToggle";
 import WoodDeleteButton from "./WoodDeleteButton";
 import WoodImageUploader from "@/app/components/admin/WoodImageUploader";
+import NewWoodAlert from "./NewWoodAlert";
+import UrlCleanup from "./UrlCleanup";
 import { Plus, Edit2, TreeDeciduous, Star } from "lucide-react";
+import "./notifications.css";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminMaderasPage() {
+export default async function AdminMaderasPage(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParams = await props.searchParams;
+  const newIdParam = searchParams.newId;
   const woods = await getAllWoods();
 
   return (
     <div className="admin-form-container">
+      <UrlCleanup />
       <div className="admin-header">
         <div>
           <h1 className="page-title">Inventario de Maderas</h1>
@@ -29,7 +37,10 @@ export default async function AdminMaderasPage() {
 
       <div className="admin-woods-grid">
         {woods.map((wood) => (
-          <article key={wood.id} className="wood-card">
+          <article 
+            key={wood.id} 
+            className={`wood-card ${newIdParam && wood.id.toString() === newIdParam.toString() ? "wood-card-new" : ""}`}
+          >
             {/* Imagen Preview */}
             <div className="wood-card-preview">
               {wood.main_image_url ? (
@@ -80,6 +91,10 @@ export default async function AdminMaderasPage() {
                 
                 <WoodDeleteButton id={wood.id} name={wood.name} />
               </div>
+
+              {newIdParam && Number(newIdParam) === wood.id && (
+                <NewWoodAlert />
+              )}
 
               <div className="wood-uploader-card">
                 <WoodImageUploader woodId={wood.id} woodName={wood.name} />

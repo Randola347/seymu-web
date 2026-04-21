@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "X-Frame-Options",
-            value: "DENY",
+            value: "SAMEORIGIN",
           },
           {
             key: "X-Content-Type-Options",
@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
           {
             key: "Strict-Transport-Security",
             value: "max-age=31536000; includeSubDomains; preload",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://upload-widget.cloudinary.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://res.cloudinary.com https://maps.gstatic.com https://*.googleapis.com https://*.ggpht.com; font-src 'self' https://fonts.gstatic.com; frame-src 'self' https://upload-widget.cloudinary.com https://www.google.com; connect-src 'self' https://api.cloudinary.com https://maps.googleapis.com;",
           },
         ],
       },

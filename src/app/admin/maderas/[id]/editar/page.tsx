@@ -29,7 +29,7 @@ export default async function EditarMaderaPage({ params }: PageProps) {
 
   return (
     <div className="admin-form-container">
-      <Link href="/admin/maderas" className="admin-back-link">
+      <Link href="/admin/maderas" className="admin-back-btn">
         <ChevronLeft size={18} />
         Volver al inventario
       </Link>
@@ -43,18 +43,24 @@ export default async function EditarMaderaPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="admin-form-card" style={{ marginBottom: "2rem" }}>
-        <div className="form-section">
-          <h2 className="form-section-header">Galería de Imágenes</h2>
-          <AdminWoodImagesManager
-            woodId={woodId}
-            woodName={wood.name}
-            images={images}
-          />
+      <div className="admin-edit-grid">
+        <div className="admin-edit-main">
+          <WoodForm wood={wood} mode="edit" />
         </div>
-      </div>
 
-      <WoodForm wood={wood} mode="edit" />
+        <aside className="admin-edit-sidebar">
+          <div className="admin-form-card">
+            <div className="form-section">
+              <h2 className="form-section-header">Galería de Imágenes</h2>
+              <AdminWoodImagesManager
+                woodId={woodId}
+                woodName={wood.name}
+                images={images}
+              />
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }

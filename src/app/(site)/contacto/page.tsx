@@ -54,7 +54,11 @@ export default async function ContactoPage() {
                     <div>
                       <div style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '4px' }}>Teléfono / WhatsApp</div>
                       <div style={{ fontSize: '1.2rem', fontWeight: 600 }}>{formattedPhone}</div>
-                      <div style={{ fontSize: '1.2rem', fontWeight: 600, marginTop: '4px' }}>+506 8307 5179</div>
+                      {company?.phone && (
+                        <div style={{ fontSize: '1.2rem', fontWeight: 600, marginTop: '4px' }}>
+                          {formatWhatsApp(company.phone)}
+                        </div>
+                      )}
                     </div>
                   </div>
 
