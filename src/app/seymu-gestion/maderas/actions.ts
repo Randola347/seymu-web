@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createWood, updateWood, updateWoodStatus, saveWoodImages, getWoodByName } from "@/lib/seymu-data";
+import { createWood, updateWood, updateWoodStatus, saveWoodImages, getWoodByName, createWoodCategory, deleteWoodCategory } from "@/lib/seymu-data";
 import { woodSchema } from "@/lib/schemas";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -50,7 +50,13 @@ export async function createWoodAction(prevState: any, formData: FormData): Prom
   }
 
   try {
-    const wood = await createWood(validatedFields.data);
+    // Map single description to both fields for the DB
+    const woodData = {
+      ...validatedFields.data,
+      short_description: validatedFields.data.description.substring(0, 150),
+    };
+
+    const wood = await createWood(woodData);
     
     // Save images if present
     const imagesRaw = formData.getAll("wood_images");
@@ -114,7 +120,12 @@ export async function updateWoodAction(id: number, prevState: any, formData: For
   }
 
   try {
-    await updateWood(id, validatedFields.data);
+    const woodData = {
+      ...validatedFields.data,
+      short_description: validatedFields.data.description.substring(0, 150),
+    };
+
+    await updateWood(id, woodData);
     
     revalidatePath("/seymu-gestion/maderas");
     revalidatePath(`/maderas/${validatedFields.data.slug}`);
@@ -178,5 +189,31 @@ export async function deleteWoodAction(id: number) {
     return { success: true, message: "Madera eliminada correctamente." };
   } catch (error) {
     return { success: false, message: "Error al eliminar la madera." };
+  }
+}
+
+// Category Actions
+export async function createCategoryAction(name: string) {
+  const session = await auth();
+  if (!session) return { success: false, message: "No autorizado." };
+
+  try {
+    const category = await createWoodCategory(name);
+    return { success: true, category, message: "Categoría creada correctamente." };
+  } catch (error) {
+    console.error("CREATE CATEGORY ERROR:", error);
+    return { success: false, message: "Error al crear la categoría (puede que ya exista)." };
+  }
+}
+
+export async function deleteCategoryAction(id: number) {
+  const session = await auth();
+  if (!session) return { success: false, message: "No autorizado." };
+
+  try {
+    await deleteWoodCategory(id);
+    return { success: true, message: "Categoría eliminada correctamente." };
+  } catch (error) {
+    return { success: false, message: "Error al eliminar la categoría." };
   }
 }

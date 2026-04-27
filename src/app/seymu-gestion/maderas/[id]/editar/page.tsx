@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getWoodById, getWoodImages } from "@/lib/seymu-data";
+import { getWoodById, getWoodImages, getWoodCategories } from "@/lib/seymu-data";
 import AdminWoodImagesManager from "@/app/components/admin/AdminWoodImagesManager";
 import WoodForm from "../../WoodForm";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Settings } from "lucide-react";
 
 type PageProps = {
   params: Promise<{
@@ -26,6 +26,7 @@ export default async function EditarMaderaPage({ params }: PageProps) {
   }
 
   const images = await getWoodImages(woodId);
+  const categories = await getWoodCategories();
 
   return (
     <div className="admin-form-container">
@@ -45,7 +46,7 @@ export default async function EditarMaderaPage({ params }: PageProps) {
 
       <div className="admin-edit-grid">
         <div className="admin-edit-main">
-          <WoodForm wood={wood} mode="edit" />
+          <WoodForm wood={wood} mode="edit" initialCategories={categories} />
         </div>
 
         <aside className="admin-edit-sidebar">
