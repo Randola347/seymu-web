@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createWood, updateWood, updateWoodStatus, saveWoodImages, getWoodByName, createWoodCategory, deleteWoodCategory } from "@/lib/seymu-data";
+import { createWood, updateWood, updateWoodStatus, saveWoodImages, getWoodByName, createWoodCategory, deleteWoodCategory, updateWoodCategory } from "@/lib/seymu-data";
 import { woodSchema } from "@/lib/schemas";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
@@ -203,6 +203,19 @@ export async function createCategoryAction(name: string) {
   } catch (error) {
     console.error("CREATE CATEGORY ERROR:", error);
     return { success: false, message: "Error al crear la categoría (puede que ya exista)." };
+  }
+}
+
+export async function updateCategoryAction(id: number, name: string) {
+  const session = await auth();
+  if (!session) return { success: false, message: "No autorizado." };
+
+  try {
+    const category = await updateWoodCategory(id, name);
+    return { success: true, category, message: "Categoría actualizada correctamente." };
+  } catch (error) {
+    console.error("UPDATE CATEGORY ERROR:", error);
+    return { success: false, message: "Error al actualizar la categoría." };
   }
 }
 

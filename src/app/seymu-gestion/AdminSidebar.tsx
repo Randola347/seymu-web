@@ -16,7 +16,7 @@ import {
 import { signOut } from "next-auth/react";
 
 const menuItems = [
-  { name: "Dashboard", href: "/seymu-gestion", icon: Home },
+  { name: "Inicio", href: "/seymu-gestion", icon: Home },
   { name: "Empresa", href: "/seymu-gestion/empresa", icon: Settings },
   { name: "Maderas", href: "/seymu-gestion/maderas", icon: Package },
 ];
