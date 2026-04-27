@@ -1129,3 +1129,34 @@
 .admin-back-btn:hover svg {
   transform: translateX(-2px);
 }
+
+/* Category Selection Styles */
+.category-field-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.category-field-row select {
+  flex: 1;
+}
+
+.btn-manage-categories {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: var(--primary);
+  width: 42px;
+  height: 42px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-manage-categories:hover {
+  background: #f1f5f9;
+  border-color: var(--primary);
+}

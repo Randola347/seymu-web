@@ -39,6 +39,13 @@ export type Wood = {
   is_featured: boolean;
 };
 
+export type WoodCategory = {
+  id: number;
+  name: string;
+  slug: string;
+  created_at: string;
+};
+
 export type WoodImage = {
   id: number;
   wood_id: number;
@@ -498,3 +505,25 @@ export async function deleteWoodImage(imageId: number) {
     DELETE FROM wood_images WHERE id = ${imageId}
   `;
 }
+
+// Category Management
+export async function getWoodCategories(): Promise<WoodCategory[]> {
+  const rows = (await sql`
+    SELECT * FROM wood_categories ORDER BY name ASC
+  `) as WoodCategory[];
+  return rows;
+}
+
+export async function createWoodCategory(name: string): Promise<WoodCategory> {
+  const slug = slugify(name);
+  const rows = (await sql`
+    INSERT INTO wood_categories (name, slug)
+    VALUES (${name}, ${slug})
+    RETURNING *
+  `) as WoodCategory[];
+  return rows[0];
+}
+
+export async function deleteWoodCategory(id: number): Promise<void> {
+  await sql`DELETE FROM wood_categories WHERE id = ${id}`;
+}

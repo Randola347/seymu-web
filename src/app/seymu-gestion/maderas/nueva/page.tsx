@@ -1,8 +1,11 @@
 import WoodForm from "../WoodForm";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { getWoodCategories } from "@/lib/seymu-data";
 
-export default function NuevaMaderaPage() {
+export default async function NuevaMaderaPage() {
+  const categories = await getWoodCategories();
+
   return (
     <div className="admin-form-container">
       <Link href="/seymu-gestion/maderas" className="admin-back-btn">
@@ -19,7 +22,7 @@ export default function NuevaMaderaPage() {
         </div>
       </div>
 
-      <WoodForm mode="create" />
+      <WoodForm mode="create" initialCategories={categories} />
     </div>
   );
 }

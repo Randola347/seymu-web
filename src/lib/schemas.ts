@@ -16,8 +16,7 @@ export const companySchema = z.object({
 export const woodSchema = z.object({
   name: z.string().min(2, "El nombre es obligatorio"),
   slug: z.string().optional().nullable(),
-  short_description: z.string().min(10, "La descripción corta es obligatoria").max(200, "Muy larga"),
-  description: z.string().min(20, "La descripción detallada es obligatoria"),
+  description: z.string().min(10, "La descripción es obligatoria"),
   price: z.coerce.number().positive("El precio debe ser un número positivo"),
   category: z.string().min(2, "La categoría es obligatoria"),
   measurements: z.string().min(2, "Las medidas son obligatorias"),
