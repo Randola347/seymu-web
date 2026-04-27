@@ -15,7 +15,7 @@ export default async function AdminPage() {
     <div className="admin-form-container">
       <div className="admin-header">
         <div>
-          <h1 className="page-title">Panel de Control</h1>
+          <h1 className="page-title">Inicio</h1>
           <p className="page-text">
             Bienvenido al centro de administración de Seymu. Gestioná tu negocio con facilidad.
           </p>

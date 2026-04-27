@@ -524,6 +524,17 @@ export async function createWoodCategory(name: string): Promise<WoodCategory> {
   return rows[0];
 }
 
+export async function updateWoodCategory(id: number, name: string): Promise<WoodCategory> {
+  const slug = slugify(name);
+  const rows = (await sql`
+    UPDATE wood_categories
+    SET name = ${name}, slug = ${slug}
+    WHERE id = ${id}
+    RETURNING *
+  `) as WoodCategory[];
+  return rows[0];
+}
+
 export async function deleteWoodCategory(id: number): Promise<void> {
   await sql`DELETE FROM wood_categories WHERE id = ${id}`;
 }
